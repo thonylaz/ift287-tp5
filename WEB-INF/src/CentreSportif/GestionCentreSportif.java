@@ -42,6 +42,10 @@ public class GestionCentreSportif {
         // Fermeture de la connexion
         cx.fermer();
     }
+    
+    public Connexion getConnexion() {
+    	return this.cx;
+    }
 
     public GestionParticipant getGestionParticipant() {
         return gestionParticipant;

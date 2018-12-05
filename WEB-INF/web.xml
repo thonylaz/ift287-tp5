@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN" "http://java.sun.com/j2ee/dtds/web-app_2_2.dtd">
 <web-app id="test-biblio">
-  <display-name>Système de gestion de bibliothèque WEB</display-name>
+  <display-name>SystÃ¨me de gestion du centre sportif</display-name>
   <context-param>
     <param-name>exempleParam1</param-name>
     <param-value>valeurDeExempleParam1</param-value>
@@ -23,34 +23,30 @@
         </init-param>
         <init-param>
             <param-name>javaEncoding</param-name>
-            <param-value>ISO-8859-1</param-value>
+            <param-value>UTF-8</param-value>
         </init-param>
         <load-on-startup>3</load-on-startup>
     </servlet>
   <listener>
-    <listener-class>CentreSportifServlet.BiblioSessionListener</listener-class>
-    <listener-class>CentreSportifServlet.BiblioContextListener</listener-class>
+    <listener-class>CentreSportifServlet.CentreSportifSessionListener</listener-class>
+    <listener-class>CentreSportifServlet.CentreSportifContextListener</listener-class>
   </listener>
   <servlet>
+    <servlet-name>Accueil</servlet-name>
+    <servlet-class>CentreSportifServlet.Accueil</servlet-class>
+  </servlet>
+  <servlet>
     <servlet-name>Login</servlet-name>
-    <servlet-class>biblioServlet.Login</servlet-class>
+    <servlet-class>CentreSportifServlet.Login</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>Logout</servlet-name>
-    <servlet-class>biblioServlet.Logout</servlet-class>
+    <servlet-class>CentreSportifServlet.Logout</servlet-class>
   </servlet>
-  <servlet>
-    <servlet-name>SelectionMembre</servlet-name>
-    <servlet-class>biblioServlet.SelectionMembre</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>ListePretMembre</servlet-name>
-    <servlet-class>biblioServlet.ListePretMembre</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>Emprunt</servlet-name>
-    <servlet-class>biblioServlet.Emprunt</servlet-class>
-  </servlet>
+  <servlet-mapping>
+    <servlet-name>Accueil</servlet-name>
+    <url-pattern>/Accueil</url-pattern>
+  </servlet-mapping>
   <servlet-mapping>
     <servlet-name>Login</servlet-name>
     <url-pattern>/Login</url-pattern>
@@ -58,17 +54,5 @@
   <servlet-mapping>
     <servlet-name>Logout</servlet-name>
     <url-pattern>/Logout</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>SelectionMembre</servlet-name>
-    <url-pattern>/SelectionMembre</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ListePretMembre</servlet-name>
-    <url-pattern>/ListePretMembre</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>Emprunt</servlet-name>
-    <url-pattern>/Emprunt</url-pattern>
   </servlet-mapping>
 </web-app>

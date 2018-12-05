@@ -9,8 +9,8 @@ public class CentreSportifContextListener implements ServletContextListener
 {
     public void contextInitialized(ServletContextEvent sce)
     {
-        System.out.println("Contexte du CentreSportif WEB dÃ©marrÃ© : " + sce.getServletContext().getServletContextName());
-        System.out.println("Voici les paramÃ¨tres du contexte tels que dÃ©finis dans web.xml");
+        System.out.println("Contexte du CentreSportif WEB démarré : " + sce.getServletContext().getServletContextName());
+        System.out.println("Voici les paramètres du contexte tels que définis dans web.xml");
         Enumeration<String> initParams = sce.getServletContext().getInitParameterNames();
         while (initParams.hasMoreElements())
         {
@@ -21,6 +21,6 @@ public class CentreSportifContextListener implements ServletContextListener
 
     public void contextDestroyed(ServletContextEvent sce)
     {
-        System.out.println("Le contexte de l'application GestionCentreSportif vient d'etre dÃ©truit.");
+        System.out.println("Le contexte de l'application GestionCentreSportif vient d'etre détruit.");
     }
 }

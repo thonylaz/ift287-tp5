@@ -188,4 +188,14 @@ public class GestionParticipant {
         }
     }
 
+	public boolean informationsConnexionValide(String userId, String motDePasse) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	public boolean utilisateurEstAdministrateur(String userId) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
 }
