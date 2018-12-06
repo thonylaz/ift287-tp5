@@ -104,7 +104,7 @@ public class Login extends HttpServlet
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        System.out.println("Servlet Login : GET");
+        System.out.println("Servlet Equipes : GET");
         // Si on a déjà entré les informations de connexion valide
         if (CentreSportifHelper.infoBDValide(getServletContext()))
         {

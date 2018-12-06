@@ -1,4 +1,7 @@
 /login_jsp.class
 /accueil_jsp.class
-/messageErreur_jsp.class
 /navigation_jsp.class
+/equipes_jsp.class
+/ligues_jsp.class
+/participants_jsp.class
+/resultats_jsp.class

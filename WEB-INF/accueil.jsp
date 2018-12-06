@@ -23,37 +23,8 @@
 <body>
 	<div class="container">
 		<jsp:include page="/WEB-INF/navigation.jsp" />
-		<h1 class="text-center">Système de gestion de la bibliothèque</h1>
-		<h3 class="text-center">Retard</h3>
-		<div class="col-8 offset-2">
-			<table class="table">
-				<thead class="thead-dark">
-					<tr>
-						<th scope="col">Utilisateur</th>
-						<th scope="col">Nom</th>
-						<th scope="col">Téléphone</th>
-					</tr>
-				</thead>
-				<tbody>
-				</tbody>
-			</table>
-		</div>
-		        <h3 class="text-center">Mes livres</h3>
-		<div class="col-8 offset-2">
-			<table class="table">
-				<thead class="thead-dark">
-					<tr>
-						<th scope="col">#</th>
-						<th scope="col">Titre</th>
-						<th scope="col">Auteur</th>
-						<th scope="col">Date de prêt</th>
-					</tr>
-				</thead>
-				<tbody>
-				</tbody>
-			</table>
-		</div>
-		<br>
+		<h1 class="text-center">Système de gestion du centre sportif</h1>
+		<img src="centresportif.jpg" width="100%" height="100%">
 		<%-- inclusion d'une autre page pour l'affichage des messages d'erreur--%>
 		<jsp:include page="/WEB-INF/messageErreur.jsp" />
 		<br>
