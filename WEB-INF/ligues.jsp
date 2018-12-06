@@ -17,7 +17,24 @@
 	<body>
 		<div class="container">
 			<jsp:include page="/WEB-INF/navigation.jsp" />
-			<h1>LIGUES</h1>
+			<h1 class="text-center">Ligues</h1>
+			<div class="col-md-4 offset-md-4">
+			<form action="Ligues" method="POST">
+			    <div class="form-group">
+				    <label for="nomLigue">Nom de la ligue</label>
+				    <input class="form-control" type="TEXT" name="nomLigue" value="<%= (request.getAttribute("nomLigue") != null ? (String)request.getAttribute("nomLigue") : "") %>">
+			    </div>
+			    <div class="form-group">
+			    	<label for="nbJoueur">Nombre de joueurs</label>
+			    	<input class="form-control" type="NUMBER" name="nbJoueur" min="1" value="<%= (request.getAttribute("nbJoueur") != null ? (String)request.getAttribute("nbJoueur") : "") %>">
+			    </div>			    
+			    <div class="row">
+			    	<div class="col-md-6">
+						<input class="btn btn-primary" type="SUBMIT" name="ajouterLigue" value="Créer la ligue">
+					</div>
+				</div>
+			</form>
+			</div>
 			<br>
 			<%-- inclusion d'une autre page pour l'affichage des messages d'erreur--%>
 			<jsp:include page="/WEB-INF/messageErreur.jsp" />
