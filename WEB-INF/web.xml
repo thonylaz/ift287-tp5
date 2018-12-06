@@ -39,10 +39,38 @@
     <servlet-name>Login</servlet-name>
     <servlet-class>CentreSportifServlet.Login</servlet-class>
   </servlet>
+   <servlet>
+    <servlet-name>Ligues</servlet-name>
+    <servlet-class>CentreSportifServlet.Ligues</servlet-class>
+  </servlet>
+   <servlet>
+    <servlet-name>Participants</servlet-name>
+    <servlet-class>CentreSportifServlet.Participants</servlet-class>
+  </servlet>
+   <servlet>
+    <servlet-name>Resultats</servlet-name>
+    <servlet-class>CentreSportifServlet.Resultats</servlet-class>
+  </servlet>
+   <servlet>
+    <servlet-name>Equipes</servlet-name>
+    <servlet-class>CentreSportifServlet.Equipes</servlet-class>
+  </servlet>
   <servlet>
     <servlet-name>Logout</servlet-name>
     <servlet-class>CentreSportifServlet.Logout</servlet-class>
   </servlet>
+  <servlet-mapping>
+    <servlet-name>Ligues</servlet-name>
+    <url-pattern>/Ligues</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Participants</servlet-name>
+    <url-pattern>/Participants</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Resultats</servlet-name>
+    <url-pattern>/Resultats</url-pattern>
+  </servlet-mapping>
   <servlet-mapping>
     <servlet-name>Accueil</servlet-name>
     <url-pattern>/Accueil</url-pattern>
@@ -50,6 +78,10 @@
   <servlet-mapping>
     <servlet-name>Login</servlet-name>
     <url-pattern>/Login</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Equipes</servlet-name>
+    <url-pattern>/Equipes</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>Logout</servlet-name>
