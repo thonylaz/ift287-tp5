@@ -1,14 +1,8 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%
-    if(getServletContext().getAttribute("serveur") != null)
-	{%>
-        <jsp:forward page="/WEB-INF/login.jsp" />
-	<%}
-%>
+<%@ page import="java.util.*,java.text.*" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>IFT287 - Système de gestion de bibliothèque</title>
+		<title>IFT287 - Système de gestion du centre sportif</title>
 		<meta name="author" content="Vincent Ducharme">
 		<meta name="description" content="Page d'accueil du système de gestion de la bilbiothèque.">
 		
@@ -18,32 +12,29 @@
 	
 	    <!-- Bootstrap CSS -->
 	    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+			
 	</head>
 	<body>
 		<div class="container">
 			<h1 class="text-center">Système de gestion du centre sportif</h1>
 			<div class="col-md-4 offset-md-4">
-			<form action="Login" method="POST">
+			<form action="Accueil" method="POST">
 			    <div class="form-group">
-				    <label for="userIdBD">Nom d'utilisateur de la base de donnée</label>
-				    <input class="form-control" type="TEXT" name="userIdBD" value="<%= (request.getAttribute("userIdBD") != null ? (String)request.getAttribute("userIdBD") : "") %>" placeholder="ift287_XX">
+				    <label for="userIdBD">Nom d'utilisateur</label>
+				    <input class="form-control" type="TEXT" name="userId" value="<%= (request.getAttribute("userId") != null ? (String)request.getAttribute("userId") : "") %>">
 			    </div>
 			    <div class="form-group">
 			    	<label for="motDePasseBD">Mot de passe</label>
-			    	<input class="form-control" type="PASSWORD" name="motDePasseBD" value="<%= (request.getAttribute("motDePasseBD") != null ? (String)request.getAttribute("motDePasseBD") : "") %>">
-			    </div>
-			    <div class="form-group">
-				    <label for="serveur">Serveur</label>
-				    <select class="custom-select" name="serveur">
-				    	<option value="local" <%= (request.getAttribute("serveur") != null ? (((String)request.getAttribute("serveur")).equals("local") ? "selected" : "") : "") %>>local
-				    	<option value="dinf" <%= (request.getAttribute("serveur") != null ? (((String)request.getAttribute("serveur")).equals("dinf") ? "selected" : "") : "selected") %>>dinf
-				    </select>
-			    </div>
-			    <div class="form-group">
-			    	<label for="bd">Nom de la base de donnée</label>
-			    	<input class="form-control" type="TEXT" name="bd" value="<%= (request.getAttribute("bd") != null ? (String)request.getAttribute("bd") : "") %>" placeholder="ift287_XXdb">
-			    </div>
-				<input class="btn btn-primary" type="SUBMIT" name="connecter" value="Se connecter">
+			    	<input class="form-control" type="PASSWORD" name="motDePasse" value="<%= (request.getAttribute("motDePasse") != null ? (String)request.getAttribute("motDePasse") : "") %>">
+			    </div>			    
+			    <div class="row">
+			    	<div class="col-md-6">
+						<input class="btn btn-primary" type="SUBMIT" name="connecter" value="Se connecter">
+					</div>
+					<div class="col-md-6 text-right">
+						<input class="btn btn-outline-primary" type="SUBMIT" name="inscrire" value="S'inscrire" onclick="form.action='Inscription';">
+					</div>
+				</div>
 			</form>
 			</div>
 		</div>

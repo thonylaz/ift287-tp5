@@ -4,6 +4,12 @@ import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+/**
+ * Classe pour logout système de gestion de bibliothèque
+ * <P>
+ * Système de gestion de bibliothèque &copy; 2004 Marc Frappier, Université de
+ * Sherbrooke
+ */
 
 public class Logout extends HttpServlet
 {
@@ -11,10 +17,10 @@ public class Logout extends HttpServlet
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        // invalider la session pour libÃ©rer les ressources associÃ©es Ã  la
+        // invalider la session pour libérer les ressources associées à la
         // session
         request.getSession().invalidate();
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/login.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/Login");
         dispatcher.forward(request, response);
     }
 
