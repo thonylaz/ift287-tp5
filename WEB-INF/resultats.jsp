@@ -3,8 +3,8 @@
 <html>
 	<head>
 		<title>IFT287 - Système de gestion du centre sportif</title>
-		<meta name="author" content="Alexandre Beausoleil">
-		<meta name="description" content="Page de gestion des équipes">
+		<meta name="author" content="Antoine Lazure">
+		<meta name="description" content="Page de gestion des résultats">
 		
 		<!-- Required meta tags -->
 	    <meta charset="utf-8">
@@ -17,7 +17,32 @@
 	<body>
 		<div class="container">
 			<jsp:include page="/WEB-INF/navigation.jsp" />
-			<h1>RESULTATS</h1>
+			<h1 class="text-center">RESULTATS</h1>
+			<div class="col-md-4 offset-md-4">
+			<form action="Resultats" method="POST">
+			    <div class="form-group">
+				    <label for="nomEquipeA">Nom de l'équipe A</label>
+				    <input class="form-control" type="TEXT" name="nomEquipeA" value="<%= (request.getAttribute("nomEquipeA") != null ? (String)request.getAttribute("nomEquipeA") : "") %>">
+			    </div>
+			    <div class="form-group">
+			    	<label for="scoreEquipeA">Score de l'équipe A</label>
+			    	<input class="form-control" type="NUMBER" name="scoreEquipeA" min="0" value="<%= (request.getAttribute("scoreEquipeA") != null ? (String)request.getAttribute("scoreEquipeA") : "") %>">
+			    </div>
+			    <div class="form-group">
+				    <label for="nomEquipeB">Nom de l'équipe B</label>
+				    <input class="form-control" type="TEXT" name="nomEquipeB" value="<%= (request.getAttribute("nomEquipeB") != null ? (String)request.getAttribute("nomEquipeB") : "") %>">
+			    </div>
+			    <div class="form-group">
+			    	<label for="scoreEquipeB">Score de l'équipe B</label>
+			    	<input class="form-control" type="NUMBER" name="scoreEquipeB" min="0" value="<%= (request.getAttribute("scoreEquipeB") != null ? (String)request.getAttribute("scoreEquipeB") : "") %>">
+			    </div>			    		    			    
+			    <div class="row">
+			    	<div class="col-md-6">
+						<input class="btn btn-primary" type="SUBMIT" name="ajouterResultat" value="Créer le Résultat des Équipes">
+					</div>
+				</div>
+			</form>
+			</div>			
 			<br>
 			<%-- inclusion d'une autre page pour l'affichage des messages d'erreur--%>
 			<jsp:include page="/WEB-INF/messageErreur.jsp" />

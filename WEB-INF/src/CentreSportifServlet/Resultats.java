@@ -7,6 +7,7 @@ import javax.servlet.http.*;
 
 import CentreSportif.IFT287Exception;
 import CentreSportif.Connexion;
+import CentreSportif.GestionCentreSportif;
 import CentreSportifServlet.CentreSportifHelper;
 	
 public class Resultats extends HttpServlet {
@@ -15,17 +16,17 @@ public class Resultats extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-//        try
-//        {
-//            System.out.println("Servlet Login : POST");
-//            // Si on a déjà entré les informations de connexion valide
-//            if (CentreSportifHelper.infoBDValide(getServletContext()))
-//            {
-//            	CentreSportifHelper.DispatchToLogin(request, response);
-//                return;
-//            }
+       try{
+            Integer etat = (Integer) request.getSession().getAttribute("etat");
+        if (etat == null){
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/login.jsp");
+            dispatcher.forward(request, response);
+          }
+        else if (request.getParameter("ajouterResultat") != null) {
+       	 ajouterResultat(request, response);
+          }
 //            
-//            // lecture des paramètres du formulaire login.jsp
+//            // lecture des paramï¿½tres du formulaire login.jsp
 //            String userId = request.getParameter("userIdBD");
 //            String motDePasse = request.getParameter("motDePasseBD");
 //            String serveur = request.getParameter("serveur");
@@ -43,7 +44,7 @@ public class Resultats extends HttpServlet {
 //                throw new IFT287Exception("Vous devez entrer un mot de passe.");
 //            
 //            if(bd == null || bd.equals(""))
-//                throw new IFT287Exception("Vous devez entrer un nom de base de donnée.");
+//                throw new IFT287Exception("Vous devez entrer un nom de base de donnï¿½e.");
 //
 //            if (serveur == null || serveur.equals(""))
 //            {
@@ -52,12 +53,12 @@ public class Resultats extends HttpServlet {
 //            
 //            try
 //            {
-//                // Valider que les informations entrées sont les bonnes
+//                // Valider que les informations entrï¿½es sont les bonnes
 //                Connexion cx = new Connexion(serveur, bd, userId, motDePasse);
 //                cx.fermer();
 //                
-//                // Sauvegarder les informations de connexion dans le contexte pour les réutiliser
-//                // pour chaque client connecté                    
+//                // Sauvegarder les informations de connexion dans le contexte pour les rï¿½utiliser
+//                // pour chaque client connectï¿½                    
 //                getServletContext().setAttribute("serveur", serveur);
 //                getServletContext().setAttribute("bd", bd);
 //                getServletContext().setAttribute("user", userId);
@@ -67,42 +68,77 @@ public class Resultats extends HttpServlet {
 //                RequestDispatcher dispatcher = request.getRequestDispatcher("/Login");
 //                dispatcher.forward(request, response);
 //            }
-//            catch(Exception e)
-//            {
-//                List<String> listeMessageErreur = new LinkedList<String>();
-//                listeMessageErreur.add("Erreur de connexion au serveur de base de donnée");
-//                listeMessageErreur.add(e.getMessage());
-//                request.setAttribute("listeMessageErreur", listeMessageErreur);
-//                RequestDispatcher dispatcher = request.getRequestDispatcher("/index.jsp");
-//                dispatcher.forward(request, response);
-//                // pour déboggage seulement : afficher tout le contenu de
-//                // l'exception
-//                e.printStackTrace();
-//            }
-//            
-//        }
-//        catch (IFT287Exception e)
-//        {
-//            List<String> listeMessageErreur = new LinkedList<String>();
-//            listeMessageErreur.add(e.getMessage());
-//            request.setAttribute("listeMessageErreur", listeMessageErreur);
-//            RequestDispatcher dispatcher = request.getRequestDispatcher("/index.jsp");
-//            dispatcher.forward(request, response);
-//            // pour déboggage seulement : afficher tout le contenu de
-//            // l'exception
-//            e.printStackTrace();
-//        }
+       	} catch(Exception e)
+           {
+               List<String> listeMessageErreur = new LinkedList<String>();
+                listeMessageErreur.add("Erreur de connexion au serveur de base de donnï¿½e");
+                listeMessageErreur.add(e.getMessage());
+                request.setAttribute("listeMessageErreur", listeMessageErreur);
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/index.jsp");
+                dispatcher.forward(request, response);
+                // pour dï¿½boggage seulement : afficher tout le contenu de
+                // l'exception
+                e.printStackTrace();
+            }
+          
     }
 
-    // Dans les formulaires, on utilise la méthode POST
-    // donc, si le servlet est appelé avec la méthode GET, c'est que 
-    // quelqu'un a tapé le nom du servlet dans la barre d'adresse.
+    private void ajouterResultat(HttpServletRequest request, HttpServletResponse response) 
+        throws ServletException, IOException {
+        	try
+            {
+        		String nomEquipeA = request.getParameter("nomEquipeA");
+        		String scoreEquipeA = request.getParameter("scoreEquipeA");
+                String nomEquipeB = request.getParameter("nomEquipeA");
+                String scoreEquipeB = request.getParameter("scoreEquipeB");
+                if ( nomEquipeA == null || nomEquipeA.equals(""))
+                    throw new IFT287Exception("Le nom de l'Ã©quipe A doit Ãªtre spÃ©cifiÃ©");
+                if (scoreEquipeA == null || scoreEquipeA.equals(""))
+                    throw new IFT287Exception("Le score de l'Ã©quipe A doit Ãªtre spÃ©cifiÃ©");
+                if ( nomEquipeB == null || nomEquipeB.equals(""))
+                    throw new IFT287Exception("Le nom de l'Ã©quipe B doit Ãªtre spÃ©cifiÃ©");
+                if (scoreEquipeB == null || scoreEquipeB.equals(""))
+                    throw new IFT287Exception("Le score de l'Ã©quipe B doit Ãªtre spÃ©cifiÃ©");
+                      
+                GestionCentreSportif centreSportifUpdate = (GestionCentreSportif) request.getSession().getAttribute("centreSportifUpdate");
+                // exï¿½cuter la maj en utilisant synchronized pour s'assurer
+                // que le thread du servlet est le seul ï¿½ exï¿½cuter une transaction
+                // sur biblio
+                synchronized (centreSportifUpdate)
+                {
+                	centreSportifUpdate.getGestionResultat().ajouterResultat(nomEquipeA, Integer.parseInt(scoreEquipeA), nomEquipeB, Integer.parseInt(scoreEquipeB));
+                	 List<String> listeMessageSucces = new LinkedList<String>();
+                	 listeMessageSucces.add("Succes de la crÃ©ation des rÃ©sultats de l'Ã©quipe A: " + nomEquipeA + " et l'Ã©quipe B: " + nomEquipeB);
+                     request.setAttribute("listeMessageSucces", listeMessageSucces);
+                }
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/resultats.jsp");
+                dispatcher.forward(request, response);
+            }
+            catch (IFT287Exception e)
+            {
+                List<String> listeMessageErreur = new LinkedList<String>();
+                listeMessageErreur.add(e.toString());
+                request.setAttribute("listeMessageErreur", listeMessageErreur);
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/resultats.jsp");
+                dispatcher.forward(request, response);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.toString());
+            }
+		
+	}
+
+	// Dans les formulaires, on utilise la mï¿½thode POST
+    // donc, si le servlet est appelï¿½ avec la mï¿½thode GET, c'est que 
+    // quelqu'un a tapï¿½ le nom du servlet dans la barre d'adresse.
     // On redirige vers la bonne page
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         System.out.println("Servlet Resultats : GET");
-        // Si on a déjà entré les informations de connexion valide
+        // Si on a dï¿½jï¿½ entrï¿½ les informations de connexion valide
         if (CentreSportifHelper.peutProceder(getServletContext(), request, response))
         {
         	 System.out.println("Servlet Resultats : GET dispatch vers resultats.jsp");
