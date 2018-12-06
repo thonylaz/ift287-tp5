@@ -73,6 +73,9 @@ public class Ligues extends HttpServlet {
             synchronized (centreSportifUpdate)
             {
             	centreSportifUpdate.getGestionLigue().ajouterLigue(nomLigue, Integer.parseInt(nbJoueur));
+            	 List<String> listeMessageSucces = new LinkedList<String>();
+            	 listeMessageSucces.add("Succes de la création de la ligue " + nomLigue);
+                 request.setAttribute("listeMessageSucces", listeMessageSucces);
             }
             RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/ligues.jsp");
             dispatcher.forward(request, response);
@@ -82,7 +85,7 @@ public class Ligues extends HttpServlet {
             List<String> listeMessageErreur = new LinkedList<String>();
             listeMessageErreur.add(e.toString());
             request.setAttribute("listeMessageErreur", listeMessageErreur);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/listePretMembre.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/ligues.jsp");
             dispatcher.forward(request, response);
         }
         catch (Exception e)

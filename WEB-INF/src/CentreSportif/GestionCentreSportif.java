@@ -55,7 +55,7 @@ public class GestionCentreSportif {
         this.gestionParticipant = gestionParticipant;
     }
 
-    public GestionEquipe getGestionEquipe() {
+    public GestionEquipe getGestionEquipe()throws IFT287Exception {
         return gestionEquipe;
     }
 
@@ -63,7 +63,7 @@ public class GestionCentreSportif {
         this.gestionEquipe = gestionEquipe;
     }
 
-    public GestionLigue getGestionLigue() {
+    public GestionLigue getGestionLigue() throws IFT287Exception{
         return gestionLigue;
     }
 

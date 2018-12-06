@@ -37,6 +37,7 @@
 			</div>
 			<br>
 			<%-- inclusion d'une autre page pour l'affichage des messages d'erreur--%>
+			<jsp:include page="/WEB-INF/messageSucces.jsp" />
 			<jsp:include page="/WEB-INF/messageErreur.jsp" />
 			<br>
 		</div>
