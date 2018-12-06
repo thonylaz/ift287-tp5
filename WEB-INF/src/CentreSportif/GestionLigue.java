@@ -3,6 +3,8 @@ package CentreSportif;
 import java.sql.*;
 import java.util.ArrayList;
 
+import javax.servlet.http.HttpServletRequest;
+
 public class GestionLigue {
     private Connexion cx;
 
@@ -57,34 +59,21 @@ public class GestionLigue {
         }
     }
 
-    public void afficherLigue(String nomLigue) throws SQLException, IFT287Exception, Exception {
+    public void afficherLigue(String nomLigue, HttpServletRequest request) throws SQLException, IFT287Exception, Exception {
         try {
             if(!ligues.existe(nomLigue))
                 throw new IFT287Exception("Ligue inexistant: " + nomLigue);
 
-            System.out.println("Ligue : " + nomLigue);
             ArrayList<TupleEquipe> listeEquipes = equipes.getEquipes(nomLigue);
-
-            for(TupleEquipe equipe : listeEquipes) {
-                ArrayList<TupleResultat> listResultats = resultats.getResultats(equipe.getNomEquipe());
-                int nbVictoires = resultats.nbVictoires(equipe.getNomEquipe(), listResultats);
-                int nbDefaites = resultats.nbDefaites(equipe.getNomEquipe(), listResultats);
-                int nbPartieNulles = resultats.nbPartiesNulles(equipe.getNomEquipe(), listResultats);
-
-                System.out.println("Nom d'équipe: " + equipe.getNomEquipe());
-                System.out.println("  Nombre de victoires: " + nbVictoires);
-                System.out.println("  Nombre de defaites: " + nbDefaites);
-                System.out.println("  Nombre de parties nulles: " + nbPartieNulles);
-            }
-
+            request.setAttribute("resultatAfficherLigues", listeEquipes);
+            cx.commit();
         } catch (Exception e) {
             cx.rollback();
             throw e;
         }
     }
-
-
-
-
-
+    
+    public TableLigues getLigues() {
+        return ligues;
+    }
 }

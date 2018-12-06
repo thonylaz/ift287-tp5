@@ -1,4 +1,4 @@
-<%@ page import="java.util.*,java.text.*" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.util.*,java.text.*, CentreSportif.*" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -17,9 +17,112 @@
 	<body>
 		<div class="container">
 			<jsp:include page="/WEB-INF/navigation.jsp" />
-			<h1>LIGUES</h1>
+			<h1 class="text-center">Ligues</h1>
+			<h3 class="text-left">Créer une ligues</h3>
+			<hr>
+			<div class="col-md-4 pull-left">
+			<form action="Ligues" method="POST">
+			    <div class="form-group">
+				    <label for="nomLigue">Nom de la ligue</label>
+				    <input class="form-control" type="TEXT" name="nomLigue" value="<%= (request.getAttribute("nomLigue") != null ? (String)request.getAttribute("nomLigue") : "") %>">
+			    </div>
+			    <div class="form-group">
+			    	<label for="nbJoueur">Nombre de joueurs</label>
+			    	<input class="form-control" type="NUMBER" name="nbJoueur" min="1" value="<%= (request.getAttribute("nbJoueur") != null ? (String)request.getAttribute("nbJoueur") : "") %>">
+			    </div>			    
+			    <div class="row">
+			    	<div class="col-md-6">
+						<input class="btn btn-primary" type="SUBMIT" name="ajouterLigue" value="Créer la ligue">
+					</div>
+				</div>
+			</form>
+			</div>
+			<br>
+			<h3 class="text-left">Supprimer une ligues</h3>
+			<hr>
+			<div class="col-md-4 pull-left">
+				<form action="Ligues" method="POST">
+				    <div class="form-group">
+					    <label for="nomLigue">Nom de la ligue</label>
+					    <select class="form-control" name="nomLigue">
+					    <option value=""></option>
+					    <% GestionCentreSportif centreSportifInterro = (GestionCentreSportif) request.getSession().getAttribute("centreSportifInterrogation"); 
+						    ArrayList<String> ligues = centreSportifInterro.getGestionLigue().getLigues().getLigue();
+					    	for(String s : ligues) {
+					    		%><option value="<%= s %>"><%= s %></option><%
+				    		}%>
+					    </select>
+				    </div>
+				    <div class="row">
+				    	<div class="col-md-6">
+							<input class="btn btn-primary" type="SUBMIT" name="supprimerLigue" value="Supprimer la ligue">
+						</div>
+					</div>
+				</form>
+			</div>
+			<br>
+			<h3 class="text-left">Afficher une ligues</h3>
+			<hr>
+			<div class="col-md-4 pull-left">
+				<form action="Ligues" method="POST">
+				    <div class="form-group">
+					    <label for="nomLigue">Nom de la ligue</label>
+					    <select class="form-control" name="nomLigue">
+					    <option value=""></option>
+				    	<% for(String s : ligues) {
+					    		%><option value="<%= s %>"><%= s %></option><%
+				    		}%>
+					    </select>
+				    </div>
+				    <div class="row">
+				    	<div class="col-md-6">
+							<input class="btn btn-primary" type="SUBMIT" name="afficherLigue" value="Afficher la ligue">
+						</div>
+					</div>
+				</form>
+			</div>
+			<br>
+			<div class="container">
+			<%
+			if(request.getAttribute("resultatAfficherLigues") != null) {
+				ArrayList<TupleEquipe> listeEquipes = (ArrayList<TupleEquipe>) request.getAttribute("resultatAfficherLigues");
+				int row = 0;
+					%> <table class="table">
+						  <thead>
+						    <tr>
+						      <th scope="col">#</th>
+						      <th scope="col">Nom équipe</th>
+						      <th scope="col">Victoires</th>
+						      <th scope="col">Défaites</th>
+						      <th scope="col">Parties nulles</th>
+						    </tr>
+						  </thead>
+						  <tbody>
+				  <%
+					for(TupleEquipe equipe : listeEquipes) {
+		                ArrayList<TupleResultat> listResultats = centreSportifInterro.getGestionResultat().getResultat().getResultats(equipe.getNomEquipe());
+		                int nbVictoires = centreSportifInterro.getGestionResultat().getResultat().nbVictoires(equipe.getNomEquipe(), listResultats);
+		                int nbDefaites = centreSportifInterro.getGestionResultat().getResultat().nbDefaites(equipe.getNomEquipe(), listResultats);
+		                int nbPartieNulles = centreSportifInterro.getGestionResultat().getResultat().nbPartiesNulles(equipe.getNomEquipe(), listResultats);
+						%>
+						    <tr>
+						      <th scope="row"><%=row++ %></th>
+						      <td><%=equipe.getNomEquipe() %></td>
+						      <td><%=nbVictoires %></td>
+						      <td><%=nbDefaites %></td>
+						      <td><%=nbPartieNulles %></td>
+						    </tr>
+						<%
+		            }%>
+				  		</tbody>
+					</table>
+					<%
+				
+			}%>
+			</div>
 			<br>
 			<%-- inclusion d'une autre page pour l'affichage des messages d'erreur--%>
+			<jsp:include page="/WEB-INF/messageSucces.jsp" />
 			<jsp:include page="/WEB-INF/messageErreur.jsp" />
 			<br>
 		</div>

@@ -52,6 +52,10 @@ public class GestionResultat {
             throw e;
         }
     }
+    
+    public TableResultats getResultat() {
+    	return  resultats;
+    }
 
 
 }

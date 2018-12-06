@@ -1,13 +1,18 @@
 package CentreSportifServlet;
+import CentreSportif.*;
 
 import java.util.*;
 import java.io.*;
+import java.sql.Date;
+
 import javax.servlet.*;
 import javax.servlet.http.*;
 
 import CentreSportif.IFT287Exception;
+import CentreSportif.GestionCentreSportif;
 import CentreSportif.Connexion;
 import CentreSportifServlet.CentreSportifHelper;
+import CentreSportifServlet.CentreSportifConstantes;
 	
 public class Ligues extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -15,83 +20,151 @@ public class Ligues extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-//        try
-//        {
-//            System.out.println("Servlet Login : POST");
-//            // Si on a déjà entré les informations de connexion valide
-//            if (CentreSportifHelper.infoBDValide(getServletContext()))
-//            {
-//            	CentreSportifHelper.DispatchToLogin(request, response);
-//                return;
-//            }
-//            
-//            // lecture des paramètres du formulaire login.jsp
-//            String userId = request.getParameter("userIdBD");
-//            String motDePasse = request.getParameter("motDePasseBD");
-//            String serveur = request.getParameter("serveur");
-//            String bd = request.getParameter("bd");
-//            
-//            request.setAttribute("userIdBD", userId);
-//            request.setAttribute("motDePasseBD", motDePasse);
-//            request.setAttribute("serveur", serveur);
-//            request.setAttribute("bd", bd);
-//                        
-//            if(userId == null || userId.equals(""))
-//                throw new IFT287Exception("Vous devez entrer un nom d'utilisateur.");
-//            
-//            if(motDePasse == null || motDePasse.equals(""))
-//                throw new IFT287Exception("Vous devez entrer un mot de passe.");
-//            
-//            if(bd == null || bd.equals(""))
-//                throw new IFT287Exception("Vous devez entrer un nom de base de donnée.");
-//
-//            if (serveur == null || serveur.equals(""))
-//            {
-//                throw new IFT287Exception("Vous devez choisir un serveur.");
-//            }
-//            
-//            try
-//            {
-//                // Valider que les informations entrées sont les bonnes
-//                Connexion cx = new Connexion(serveur, bd, userId, motDePasse);
-//                cx.fermer();
-//                
-//                // Sauvegarder les informations de connexion dans le contexte pour les réutiliser
-//                // pour chaque client connecté                    
-//                getServletContext().setAttribute("serveur", serveur);
-//                getServletContext().setAttribute("bd", bd);
-//                getServletContext().setAttribute("user", userId);
-//                getServletContext().setAttribute("pass", motDePasse);
-//                
-//                // Afficher le menu de connexion principal de l'application 
-//                RequestDispatcher dispatcher = request.getRequestDispatcher("/Login");
-//                dispatcher.forward(request, response);
-//            }
-//            catch(Exception e)
-//            {
-//                List<String> listeMessageErreur = new LinkedList<String>();
-//                listeMessageErreur.add("Erreur de connexion au serveur de base de donnée");
-//                listeMessageErreur.add(e.getMessage());
-//                request.setAttribute("listeMessageErreur", listeMessageErreur);
-//                RequestDispatcher dispatcher = request.getRequestDispatcher("/index.jsp");
-//                dispatcher.forward(request, response);
-//                // pour déboggage seulement : afficher tout le contenu de
-//                // l'exception
-//                e.printStackTrace();
-//            }
-//            
-//        }
-//        catch (IFT287Exception e)
-//        {
-//            List<String> listeMessageErreur = new LinkedList<String>();
-//            listeMessageErreur.add(e.getMessage());
-//            request.setAttribute("listeMessageErreur", listeMessageErreur);
-//            RequestDispatcher dispatcher = request.getRequestDispatcher("/index.jsp");
-//            dispatcher.forward(request, response);
-//            // pour déboggage seulement : afficher tout le contenu de
-//            // l'exception
-//            e.printStackTrace();
-//        }
+    	 try {
+         	 Integer etat = (Integer) request.getSession().getAttribute("etat");
+              if (etat == null){
+                  RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/login.jsp");
+                  dispatcher.forward(request, response);
+              } else if (request.getParameter("ajouterLigue") != null) {
+             	 ajouterLigue(request, response);
+              } else if (request.getParameter("supprimerLigue") != null) {
+            	supprimerLigue(request, response);  
+              } else if (request.getParameter("afficherLigue") != null) {
+              	afficherLigue(request, response);  
+              }
+//              else if (request.getParameter("renouveler") != null)
+//                  traiterRenouveler(request, response);
+//              else if (request.getParameter("emprunter") != null)
+//                  traiterEmprunter(request, response);
+//              else if (request.getParameter("selectionMembre") != null)
+//                  traiterSelectionMembre(request, response);
+//              else
+//              {
+//                  List<String> listeMessageErreur = new LinkedList<String>();
+//                  listeMessageErreur.add("Choix non reconnu");
+//                  request.setAttribute("listeMessageErreur", listeMessageErreur);
+//                  RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/listePretMembre.jsp");
+//                  dispatcher.forward(request, response);
+//              }
+
+         } catch(Exception e) {
+             List<String> listeMessageErreur = new LinkedList<String>();
+             listeMessageErreur.add("Erreur de connexion au serveur de base de donnée");
+             listeMessageErreur.add(e.getMessage());
+             request.setAttribute("listeMessageErreur", listeMessageErreur);
+             RequestDispatcher dispatcher = request.getRequestDispatcher("/index.jsp");
+             dispatcher.forward(request, response);
+             // pour déboggage seulement : afficher tout le contenu de
+             // l'exception
+             e.printStackTrace();
+         }
+    }
+    
+    public void ajouterLigue(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+    	try
+        {
+    		String nomLigue = request.getParameter("nomLigue");
+            String nbJoueur = request.getParameter("nbJoueur");
+            if (nomLigue == null || nomLigue.equals(""))
+                throw new IFT287Exception("Le nom de la ligue doit être spécifié");
+            if (nbJoueur == null || nbJoueur.equals(""))
+                throw new IFT287Exception("Le nombre de joueurs de la ligue doit être spécifié");
+            GestionCentreSportif centreSportifUpdate = (GestionCentreSportif) request.getSession().getAttribute("centreSportifUpdate");
+            // exécuter la maj en utilisant synchronized pour s'assurer
+            // que le thread du servlet est le seul à exécuter une transaction
+            // sur biblio
+            synchronized (centreSportifUpdate)
+            {
+            	centreSportifUpdate.getGestionLigue().ajouterLigue(nomLigue, Integer.parseInt(nbJoueur));
+            	 List<String> listeMessageSucces = new LinkedList<String>();
+            	 listeMessageSucces.add("Succes de la création de la ligue " + nomLigue);
+                 request.setAttribute("listeMessageSucces", listeMessageSucces);
+            }
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/ligues.jsp");
+            dispatcher.forward(request, response);
+        }
+        catch (IFT287Exception e)
+        {
+            List<String> listeMessageErreur = new LinkedList<String>();
+            listeMessageErreur.add(e.toString());
+            request.setAttribute("listeMessageErreur", listeMessageErreur);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/ligues.jsp");
+            dispatcher.forward(request, response);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.toString());
+        }
+    }
+    
+    public void supprimerLigue(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+    	try
+        {
+    		String nomLigue = request.getParameter("nomLigue");
+            if (nomLigue == null || nomLigue.equals(""))
+                throw new IFT287Exception("Le nom de la ligue doit être spécifié");
+            GestionCentreSportif centreSportifUpdate = (GestionCentreSportif) request.getSession().getAttribute("centreSportifUpdate");
+            // exécuter la maj en utilisant synchronized pour s'assurer
+            // que le thread du servlet est le seul à exécuter une transaction
+            // sur biblio
+            synchronized (centreSportifUpdate) {
+            	centreSportifUpdate.getGestionLigue().supprimerLigue(nomLigue);
+            	List<String> listeMessageSucces = new LinkedList<String>();
+            	listeMessageSucces.add("Succes de la suppression de la ligue " + nomLigue);
+            	request.setAttribute("listeMessageSucces", listeMessageSucces);
+            }
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/ligues.jsp");
+            dispatcher.forward(request, response);
+        }
+        catch (IFT287Exception e)
+        {
+            List<String> listeMessageErreur = new LinkedList<String>();
+            listeMessageErreur.add(e.toString());
+            request.setAttribute("listeMessageErreur", listeMessageErreur);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/ligues.jsp");
+            dispatcher.forward(request, response);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.toString());
+        }
+    }
+    
+    public void afficherLigue(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+    	try
+        {
+    		String nomLigue = request.getParameter("nomLigue");
+            if (nomLigue == null || nomLigue.equals(""))
+                throw new IFT287Exception("Le nom de la ligue doit être spécifié");
+            GestionCentreSportif centreSportifUpdate = (GestionCentreSportif) request.getSession().getAttribute("centreSportifUpdate");
+            // exécuter la maj en utilisant synchronized pour s'assurer
+            // que le thread du servlet est le seul à exécuter une transaction
+            // sur biblio
+            synchronized (centreSportifUpdate) {
+            	System.out.println("afficher ligue");
+            	centreSportifUpdate.getGestionLigue().afficherLigue(nomLigue, request);
+            }
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/ligues.jsp");
+            dispatcher.forward(request, response);
+        }
+        catch (IFT287Exception e)
+        {
+            List<String> listeMessageErreur = new LinkedList<String>();
+            listeMessageErreur.add(e.toString());
+            request.setAttribute("listeMessageErreur", listeMessageErreur);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/ligues.jsp");
+            dispatcher.forward(request, response);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.toString());
+        }
     }
 
     // Dans les formulaires, on utilise la méthode POST
@@ -105,6 +178,17 @@ public class Ligues extends HttpServlet {
         // Si on a déjà entré les informations de connexion valide
         if (CentreSportifHelper.peutProceder(getServletContext(), request, response))
         {
+//        	GestionCentreSportif centreSportifUpdate = (GestionCentreSportif) request.getSession().getAttribute("centreSportifUpdate");
+//            // exécuter la maj en utilisant synchronized pour s'assurer
+//            // que le thread du servlet est le seul à exécuter une transaction
+//            // sur biblio
+//            synchronized (centreSportifUpdate) {
+//            	//centreSportifUpdate.getGestionLigue(request).allerChercherLigues();
+//            	List<String> listeMessageSucces = new LinkedList<String>();
+//            	listeMessageSucces.add("Succes de la suppression de la ligue " + nomLigue);
+//            	request.setAttribute("listeMessageSucces", listeMessageSucces);
+//            }
+        	
         	 System.out.println("Servlet Ligues : GET dispatch vers ligues.jsp");
              RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/ligues.jsp");
              dispatcher.forward(request, response);

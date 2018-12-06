@@ -141,7 +141,7 @@ public class CentreSportif {
                 }
                 else if (command.equals("afficherLigue")) {
                     String nomLigue = readString(tokenizer);
-                    gestionCentreSportif.getGestionLigue().afficherLigue(nomLigue);
+                    //gestionCentreSportif.getGestionLigue().afficherLigue(nomLigue);
                 }
                 else if (command.equals("ajouterResultat")) {
                     String nomEquipeA = readString(tokenizer);
