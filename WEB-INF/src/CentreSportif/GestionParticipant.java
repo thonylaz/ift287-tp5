@@ -142,7 +142,7 @@ public class GestionParticipant {
             
             TupleLigue tupleLigue = ligues.getLigue(tupleEquipe.getNomLigue());
             if(tupleLigue == null)
-                throw new IFT287Exception("Ligue: " + tupleLigue.getNomLigue() + " non existante");
+                throw new IFT287Exception("Ligue: " + tupleEquipe.getNomLigue() + " non existante");
 
             if (tupleLigue.getNbJoueurMaxParEquipe() <= participants.getJoueursEquipe(nomEquipe).size())
                 throw new IFT287Exception("Equipe complete");
