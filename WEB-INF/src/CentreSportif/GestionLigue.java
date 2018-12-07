@@ -73,7 +73,7 @@ public class GestionLigue {
         }
     }
     
-    public TableLigues getLigues() {
+    public TableLigues getLigues() throws IFT287Exception {
         return ligues;
     }
 }

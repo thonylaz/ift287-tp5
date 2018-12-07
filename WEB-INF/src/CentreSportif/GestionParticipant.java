@@ -187,4 +187,8 @@ public class GestionParticipant {
             throw e;
         }
     }
+    
+    public TableParticipants getParticipant()  throws IFT287Exception {
+    	return participants;
+    }
 }

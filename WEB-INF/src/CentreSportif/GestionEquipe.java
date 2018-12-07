@@ -3,6 +3,8 @@ package CentreSportif;
 import java.sql.*;
 import java.util.ArrayList;
 
+import javax.servlet.http.HttpServletRequest;
+
 public class GestionEquipe {
     private TableLigues ligues;
     private TableEquipes equipes;
@@ -22,42 +24,20 @@ public class GestionEquipe {
         this.ligues = ligues;
     }
 
-    public void afficherEquipe(String nomEquipe) throws SQLException, IFT287Exception {
+    public void afficherEquipe(String nomEquipe, HttpServletRequest request) throws SQLException, IFT287Exception {
         try {
             TupleEquipe tupleEquipe = equipes.getEquipe(nomEquipe);
 
             if (tupleEquipe == null)
-                throw new IFT287Exception("Nom d'Ã©quipe inexistant: " + nomEquipe);
+                throw new IFT287Exception("Nom d'équipe inexistant: " + nomEquipe);
 
             if(!participants.existe(tupleEquipe.getMatriculeCapitaine()))
                 throw new IFT287Exception("Matricule inexistante: " + tupleEquipe.getMatriculeCapitaine());
-
+            
             TupleParticipant capitaine = participants.getParticipant(tupleEquipe.getMatriculeCapitaine());
-
-            System.out.println("\nNom d'equipe : " + tupleEquipe.getNomEquipe() +
-                    "\nNom de ligue : " + tupleEquipe.getNomLigue() +
-                    "\nCapitaine : " + capitaine.getPrenom() + " " + capitaine.getNom());
-            System.out.println();
-            ArrayList<TupleParticipant> listParticipants = participants.getJoueursEquipe(nomEquipe);
-
-            if (listParticipants.isEmpty())
-                System.out.println("Aucun joueur");
-
-            else {
-                System.out.println("Liste des joueurs");
-                for (TupleParticipant participant : listParticipants) {
-                    System.out.println(participant.toString());
-                }
-            }
-
-            System.out.println();
-
-            ArrayList<TupleResultat> listResultats = resultats.getResultats(nomEquipe);
-
-            System.out.println("Liste des parties");
-            for (TupleResultat resultat: listResultats)
-                System.out.println(resultat.toString());
-
+            request.setAttribute("resultatAfficherEquipe_Equipe", tupleEquipe);
+            request.setAttribute("resultatAfficherEquipe_Capitaine", capitaine);
+            cx.commit();
         } catch (Exception e) {
             cx.rollback();
             throw e;
@@ -84,7 +64,9 @@ public class GestionEquipe {
             // Verifie si le capitaine existe
             if (!participants.existe(matriculeCapitaine))
                 throw new IFT287Exception("Participant inexistant: " + matriculeCapitaine);
-
+            TupleParticipant participant = participants.getParticipant(matriculeCapitaine);
+            if(participant.getNomEquipe() != null)
+            	throw new IFT287Exception("Participant déjà dans une équipe: " + matriculeCapitaine);
             // Ajout d'une equipe.
             equipes.ajouter(nomLigue, nomEquipe, matriculeCapitaine);
             participants.ajouterEquipe(nomEquipe,matriculeCapitaine);
@@ -96,5 +78,9 @@ public class GestionEquipe {
             cx.rollback();
             throw e;
         }
+    }
+    
+    public TableEquipes getEquipe() {
+    	return equipes;
     }
 }

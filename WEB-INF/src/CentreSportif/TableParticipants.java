@@ -12,6 +12,7 @@ public class TableParticipants {
     private PreparedStatement stmtExiste;
     private PreparedStatement stmtInsert;
     private PreparedStatement stmtDelete;
+    private PreparedStatement stmtParticpantMatricule;
     private PreparedStatement stmtUpdateNomEquipeNull;
     private PreparedStatement stmtUpdateNomEquipe;
     private PreparedStatement stmtUpdateAccepte;
@@ -43,6 +44,8 @@ public class TableParticipants {
 
         stmtgetJoueurEquipe = cx.getConnection().prepareStatement(
                 "select matricule, nom, prenom, motDePasse, nomEquipe from participants where nomEquipe = ? and estAccepte = 1");
+        
+        stmtParticpantMatricule = cx.getConnection().prepareStatement("select matricule from participants");
     }
 
     public boolean existe(int matricule) throws SQLException {
@@ -135,6 +138,16 @@ public class TableParticipants {
         rset.close();
         return participants;
     }
+    
+    public ArrayList<String> getParticipantsMatricule() throws SQLException {
+        ArrayList<String> listes = new ArrayList<>();
+        ResultSet rset = stmtParticpantMatricule.executeQuery();
+        while(rset.next()) {
+            listes.add(Integer.toString(rset.getInt(1)));
+        }
+        rset.close();
+        return listes;
+    } 
 
     /**
      * Retourner la connexion associée.
