@@ -133,7 +133,7 @@ public class CentreSportif {
                     gestionCentreSportif.getGestionParticipant().refuserJoueur(nomEquipe, matricule);
                 }
                 else if (command.equals("afficherEquipes")) {
-                    gestionCentreSportif.getGestionEquipe().afficherEquipes();
+                    //gestionCentreSportif.getGestionEquipe().afficherEquipes();
                 }
                 else if (command.equals("afficherEquipe")) {
                     String nomEquipe = readString(tokenizer);

@@ -44,11 +44,9 @@ public class GestionEquipe {
         }
     }
 
-    public void afficherEquipes() throws SQLException {
-        ArrayList<TupleEquipe> listEquipes = equipes.getEquipes();
-        System.out.println("");
-        for (TupleEquipe equipe : listEquipes)
-            System.out.println(equipe.toString());
+    public void afficherEquipes(HttpServletRequest request) throws SQLException {
+		ArrayList<TupleEquipe> listEquipes = equipes.getEquipes();
+        request.setAttribute("resultatAfficherEquipes", listEquipes);
     }
 
     public void ajouterEquipe(String nomLigue, String nomEquipe, int matriculeCapitaine) throws IFT287Exception, SQLException {

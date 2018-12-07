@@ -24,6 +24,8 @@ public class Equipes extends HttpServlet {
 	        	 ajouterEquipe(request, response);
 	         } else if (request.getParameter("afficherEquipe") != null) {
 	        	 afficherEquipe(request, response);
+	         } else if(request.getParameter("afficherEquipes") != null) {
+	        	 afficherEquipes(request, response);
 	         }
 	    } catch(Exception e) {
 	        List<String> listeMessageErreur = new LinkedList<String>();
@@ -84,6 +86,29 @@ public class Equipes extends HttpServlet {
             // sur biblio
             synchronized (centreSportifUpdate) {
             	centreSportifUpdate.getGestionEquipe().afficherEquipe(nomEquipe, request);
+            }
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/equipes.jsp");
+            dispatcher.forward(request, response);
+        } catch (IFT287Exception e) {
+            List<String> listeMessageErreur = new LinkedList<String>();
+            listeMessageErreur.add(e.toString());
+            request.setAttribute("listeMessageErreur", listeMessageErreur);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/equipes.jsp");
+            dispatcher.forward(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.toString());
+        }
+    }
+    
+    public void afficherEquipes(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	try {
+            GestionCentreSportif centreSportifUpdate = (GestionCentreSportif) request.getSession().getAttribute("centreSportifUpdate");
+            // exécuter la maj en utilisant synchronized pour s'assurer
+            // que le thread du servlet est le seul à exécuter une transaction
+            // sur biblio
+            synchronized (centreSportifUpdate) {
+            	centreSportifUpdate.getGestionEquipe().afficherEquipes(request);
             }
             RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/equipes.jsp");
             dispatcher.forward(request, response);

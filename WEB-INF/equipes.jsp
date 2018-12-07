@@ -81,16 +81,16 @@
 						TupleEquipe tupleEquipe = (TupleEquipe)request.getAttribute("resultatAfficherEquipe_Equipe");
 						TupleParticipant capitaine = (TupleParticipant)request.getAttribute("resultatAfficherEquipe_Capitaine");%>
 						<table class="table">
-							  <thead>
-							    <tr>
-							      <th scope="col">Nom équipe</th>
-							      <th scope="col">Nom de la ligue</th>
-							      <th scope="col">Capitaine</th>
-							    </tr>
-							  </thead>
-							  <tbody>
-								  <tr>
-								      <td><%=tupleEquipe.getNomEquipe()%></td>
+						  <thead>
+						    <tr>
+						      <th scope="col">Nom équipe</th>
+						      <th scope="col">Nom de la ligue</th>
+						      <th scope="col">Capitaine</th>
+						    </tr>
+						  	</thead>
+							<tbody>
+								<tr>
+								  <td><%=tupleEquipe.getNomEquipe()%></td>
 								      <td><%=tupleEquipe.getNomLigue()%></td>
 								      <td><%=capitaine.getPrenom() + " " + capitaine.getNom()%></td>
 								  </tr>
@@ -145,7 +145,40 @@
 			            <%}%>
 			          	  </tbody>
 				 		</table>
+				 		<br>
 					<%}%>
+			<h3 class="text-left">Afficher les équipes</h3>
+			<hr>
+			<form action="Equipes" method="POST">
+			    <div class="row">
+			    	<div class="col-md-6">
+						<input class="btn btn-primary" type="SUBMIT" name="afficherEquipes" value="Afficher les équipes">
+					</div>
+				</div>
+			</form>
+			<br>
+			<table class="table">
+			  <thead>
+			    <tr>
+			      <th scope="col">Nom de la ligue</th>
+			      <th scope="col">Nom de léquipe</th>
+			      <th scope="col">Matricule capitaine</th>
+			    </tr>
+			  	</thead>
+				<tbody>
+				<%if(request.getAttribute("resultatAfficherEquipes") != null) {
+					ArrayList<TupleEquipe> listeEquipes = (ArrayList<TupleEquipe>) request.getAttribute("resultatAfficherEquipes");
+					for(TupleEquipe e : listeEquipes){%>
+						<tr>
+					  		<td><%=e.getNomLigue()%></td>
+					   		<td><%=e.getNomEquipe()%></td>
+					   		<td><%=Integer.toString(e.getMatriculeCapitaine()) %></td>
+						</tr>	
+					<%}
+				}%>
+				</tbody>
+			</table>
+			<br>
 			<%-- inclusion d'une autre page pour l'affichage des messages d'erreur--%>
 			<jsp:include page="/WEB-INF/messageSucces.jsp" />
 			<jsp:include page="/WEB-INF/messageErreur.jsp" />
