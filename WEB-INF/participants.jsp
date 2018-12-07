@@ -1,10 +1,10 @@
-<%@ page import="java.util.*,java.text.*" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.util.*,java.text.*, CentreSportif.*" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 	<head>
 		<title>IFT287 - Système de gestion du centre sportif</title>
 		<meta name="author" content="Alexandre Beausoleil">
-		<meta name="description" content="Page de gestion des équipes">
+		<meta name="description" content="Page de gestion des participants">
 		
 		<!-- Required meta tags -->
 	    <meta charset="utf-8">
@@ -17,9 +17,37 @@
 	<body>
 		<div class="container">
 			<jsp:include page="/WEB-INF/navigation.jsp" />
-			<h1>PARTICIPANTS</h1>
-			<br>
+			<h1 class="text-center">Participant</h1>
+			<h3 class="text-left">Inscrire un participant</h3>
+			<hr>
+			<div class="col-md-4 pull-left">
+			<form action="Participants" method="POST">
+				<div class="form-group">
+			    	<label for="matricule">Matricule</label>
+			    	<input class="form-control" type="NUMBER" name="matricule" min="1" value="<%= (request.getAttribute("matricule") != null ? (String)request.getAttribute("matricule") : "") %>">
+			    </div>
+			    <div class="form-group">
+				    <label for="nom">Nom</label>
+				    <input class="form-control" type="TEXT" name="nom" value="<%= (request.getAttribute("nom") != null ? (String)request.getAttribute("nom") : "") %>">
+			    </div>
+			    <div class="form-group">
+				    <label for="prenom">Prenom</label>
+				    <input class="form-control" type="TEXT" name="prenom" value="<%= (request.getAttribute("prenom") != null ? (String)request.getAttribute("prenom") : "") %>">
+			    </div>
+			    <div class="form-group">
+				    <label for="motDePasse">Mot de passe</label>
+				    <input class="form-control" type="TEXT" name="motDePasse" value="<%= (request.getAttribute("motDePasse") != null ? (String)request.getAttribute("motDePasse") : "") %>">
+			    </div>	    			    
+			    <div class="row">
+			    	<div class="col-md-6">
+						<input class="btn btn-primary" type="SUBMIT" name="inscrireParticipant" value="Inscrire le participant">
+					</div>
+				</div>
+			</form>
+			</div>
+	
 			<%-- inclusion d'une autre page pour l'affichage des messages d'erreur--%>
+			<jsp:include page="/WEB-INF/messageSucces.jsp" />
 			<jsp:include page="/WEB-INF/messageErreur.jsp" />
 			<br>
 		</div>
