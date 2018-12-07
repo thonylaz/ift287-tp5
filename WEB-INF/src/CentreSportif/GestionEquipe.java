@@ -15,9 +15,9 @@ public class GestionEquipe {
     public GestionEquipe(TableLigues ligues, TableEquipes equipes, TableParticipants participants, TableResultats resultats) throws IFT287Exception {
         this.cx = equipes.getConnexion();
         if (equipes.getConnexion() != participants.getConnexion())
-            throw new IFT287Exception("Les instances de TableEquipes et de TableParticipants n'utilisent pas la mÃªme connexion au serveur");
+            throw new IFT287Exception("Les instances de TableEquipes et de TableParticipants n'utilisent pas la même connexion au serveur");
         if (equipes.getConnexion() != resultats.getConnexion())
-            throw new IFT287Exception("Les instances de TableEquipes et de TableResultats n'utilisent pas la mÃªme connexion au serveur");
+            throw new IFT287Exception("Les instances de TableEquipes et de TableResultats n'utilisent pas la même connexion au serveur");
         this.resultats = resultats;
         this.participants = participants;
         this.equipes = equipes;
@@ -53,7 +53,7 @@ public class GestionEquipe {
         try {
             // VÃ©rifie si l'equipe existe dÃ©ja
             if (equipes.existe(nomEquipe))
-                throw new IFT287Exception("Equipe existe dÃ©jÃ : " + nomEquipe);
+                throw new IFT287Exception("Equipe existe déjà : " + nomEquipe);
 
             // VÃ©rifie si la ligue existe
             if (!ligues.existe(nomLigue))
