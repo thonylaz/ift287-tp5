@@ -55,7 +55,7 @@ public class TableLigues {
         {
             TupleLigue tupleLigue = new TupleLigue();
             tupleLigue.setNomLigue(nomLigue);
-            tupleLigue.setNbJoueurMaxParEquipe(rset.getInt(1));
+            tupleLigue.setNbJoueurMaxParEquipe(rset.getInt(2));
 
             rset.close();
             return tupleLigue;
@@ -70,7 +70,7 @@ public class TableLigues {
         return cx;
     }
 
-	public ArrayList<String> getLigue() throws SQLException {
+	public ArrayList<String> getLigues() throws SQLException {
 		ArrayList<String> ligues = new ArrayList<String>();
 		ResultSet rset = stmtLigues.executeQuery();
 		while(rset.next()) {

@@ -36,7 +36,7 @@
 			    </div>
 			    <div class="form-group">
 				    <label for="motDePasse">Mot de passe</label>
-				    <input class="form-control" type="TEXT" name="motDePasse" value="<%= (request.getAttribute("motDePasse") != null ? (String)request.getAttribute("motDePasse") : "") %>">
+				    <input class="form-control" type="PASSWORD" name="motDePasse" value="<%= (request.getAttribute("motDePasse") != null ? (String)request.getAttribute("motDePasse") : "") %>">
 			    </div>	    			    
 			    <div class="row">
 			    	<div class="col-md-6">
@@ -49,26 +49,149 @@
 			<h3 class="text-left">Supprimer un participant</h3>
 			<hr>
 			<div class="col-md-4 pull-left">
-				<form action="Participants" method="POST">
-				    <div class="form-group">
-					    <label for="nomLigue">Matricule du participant</label>
-					    <select class="form-control" name="matricule">
+			<form action="Participants" method="POST">
+				<div class="form-group">
+			    	<label for="matricule">Matricule</label>
+			    	<select class="form-control" name="matricule">
 					    <option value=""></option>
-					    <% GestionCentreSportif centreSportifInterro = (GestionCentreSportif) request.getSession().getAttribute("centreSportifInterrogation"); 
-						    ArrayList<String> participantsMatricule = new ArrayList<>();// = centreSportifInterro.getGestionParticipant().getParticipants().getParticipantsMatricule();
-					    	for(String s : participantsMatricule) {
-					    		%><option value="<%= s %>"><%= s %></option><%
-				    		}%>
-					    </select>
-				    </div>
-				    <div class="row">
-				    	<div class="col-md-6">
-							<input class="btn btn-primary" type="SUBMIT" name="supprimerParticipant" value="Supprimer le participant">
-						</div>
+					    <%  GestionCentreSportif centreSportifInterro = (GestionCentreSportif) request.getSession().getAttribute("centreSportifInterrogation");  
+					    ArrayList<String> matricule = centreSportifInterro.getGestionParticipant().getParticipant().getParticipantsMatricule();
+				    	for(String s : matricule) {
+				    		%><option value="<%= s %>"><%= s %></option><%
+			    		}%>
+				    </select>
+			    </div>
+			    <div class="row">
+			    	<div class="col-md-6">
+						<input class="btn btn-primary" type="SUBMIT" name="supprimerParticipant" value="Supprimer le participant">
 					</div>
-				</form>
+				</div>
+			</form>
 			</div>
-	
+			<br>
+			<h3 class="text-left">Inscrire un participant à une équipe</h3>
+			<hr>
+			<div class="col-md-4 pull-left">
+			<form action="Participants" method="POST">
+				<div class="form-group">
+			    	<label for="matricule">Matricule</label>
+			    	<select class="form-control" name="matricule">
+					    <option value=""></option>   
+  					    <%for(String s : matricule) {
+				    		%><option value="<%= s %>"><%= s %></option><%
+			    		}%>
+				    </select>
+			    </div>
+			    <div class="form-group">
+			    	<label for="nomEquipe">Nom de léquipe</label>
+			    	<select class="form-control" name="nomEquipe">
+					    <option value=""></option>   
+  					    <%ArrayList<String> equipes = centreSportifInterro.getGestionEquipe().getEquipe().getNomEquipes();
+  					    for(String s : equipes) {
+				    		%><option value="<%= s %>"><%= s %></option><%
+			    		}%>
+				    </select>
+			    </div>
+			    <div class="row">
+			    	<div class="col-md-6">
+						<input class="btn btn-primary" type="SUBMIT" name="ajouterJoueur" value="S'inscrire dans cette équipe">
+					</div>
+				</div>
+			</form>
+			</div>
+			<br>
+			<h3 class="text-left">Supprimer un joueur d'une équipe</h3>
+			<hr>
+			<div class="col-md-4 pull-left">
+			<form action="Participants" method="POST">
+				<div class="form-group">
+			    	<label for="matricule">Matricule</label>
+			    	<select class="form-control" name="matricule">
+					    <option value=""></option>   
+  					    <%ArrayList<String> matriculeEquipe = centreSportifInterro.getGestionParticipant().getParticipant().getParticipantsDansEquipe();
+  					    for(String s : matriculeEquipe) {
+				    		%><option value="<%= s %>"><%= s %></option><%
+			    		}%>
+				    </select>
+			    </div>
+			    <div class="form-group">
+			    	<label for="nomEquipe">Nom de léquipe</label>
+			    	<select class="form-control" name="nomEquipe">
+					    <option value=""></option>   
+  					    <%for(String s : equipes) {
+				    		%><option value="<%= s %>"><%= s %></option><%
+			    		}%>
+				    </select>
+			    </div>
+			    <div class="row">
+			    	<div class="col-md-6">
+						<input class="btn btn-primary" type="SUBMIT" name="supprimerJoueur" value="Supprimer le joueur de l'équipe">
+					</div>
+				</div>
+			</form>
+			</div>
+			<br>
+			<h3 class="text-left">Accepter un participant dans l'équipe</h3>
+			<hr>
+			<div class="col-md-4 pull-left">
+			<form action="Participants" method="POST">
+				<div class="form-group">
+			    	<label for="matricule">Matricule</label>
+			    	<select class="form-control" name="matricule">
+					    <option value=""></option>   
+  					    <% ArrayList<String> matriculeInscrit = centreSportifInterro.getGestionParticipant().getParticipant().getParticipantsInscrit();
+  					    for(String s : matriculeInscrit) {
+				    		%><option value="<%= s %>"><%= s %></option><%
+			    		}%>
+				    </select>
+			    </div>
+			    <div class="form-group">
+			    	<label for="nomEquipe">Nom de léquipe</label>
+			    	<select class="form-control" name="nomEquipe">
+					    <option value=""></option>   
+  					    <%for(String s : equipes) {
+				    		%><option value="<%= s %>"><%= s %></option><%
+			    		}%>
+				    </select>
+			    </div>
+			    <div class="row">
+			    	<div class="col-md-6">
+						<input class="btn btn-primary" type="SUBMIT" name="accepterJoueur" value="Accepter le joueur">
+					</div>
+				</div>
+			</form>
+			</div>
+			<br>
+			<h3 class="text-left">Refuser un participant dans l'équipe</h3>
+			<hr>
+			<div class="col-md-4 pull-left">
+			<form action="Participants" method="POST">
+				<div class="form-group">
+			    	<label for="matricule">Matricule</label>
+			    	<select class="form-control" name="matricule">
+					    <option value=""></option>   
+  					    <%for(String s : matriculeInscrit) {
+				    		%><option value="<%= s %>"><%= s %></option><%
+			    		}%>
+				    </select>
+			    </div>
+			    <div class="form-group">
+			    	<label for="nomEquipe">Nom de léquipe</label>
+			    	<select class="form-control" name="nomEquipe">
+					    <option value=""></option>   
+  					    <%for(String s : equipes) {
+				    		%><option value="<%= s %>"><%= s %></option><%
+			    		}%>
+				    </select>
+			    </div>
+			    <div class="row">
+			    	<div class="col-md-6">
+						<input class="btn btn-primary" type="SUBMIT" name="refuserJoueur" value="Refuser le joueur">
+					</div>
+				</div>
+			</form>
+			</div>
+			<br>
 			<%-- inclusion d'une autre page pour l'affichage des messages d'erreur--%>
 			<jsp:include page="/WEB-INF/messageSucces.jsp" />
 			<jsp:include page="/WEB-INF/messageErreur.jsp" />

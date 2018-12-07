@@ -28,20 +28,6 @@ public class Ligues extends HttpServlet {
               } else if (request.getParameter("afficherLigue") != null) {
               	afficherLigue(request, response);  
               }
-//              else if (request.getParameter("renouveler") != null)
-//                  traiterRenouveler(request, response);
-//              else if (request.getParameter("emprunter") != null)
-//                  traiterEmprunter(request, response);
-//              else if (request.getParameter("selectionMembre") != null)
-//                  traiterSelectionMembre(request, response);
-//              else
-//              {
-//                  List<String> listeMessageErreur = new LinkedList<String>();
-//                  listeMessageErreur.add("Choix non reconnu");
-//                  request.setAttribute("listeMessageErreur", listeMessageErreur);
-//                  RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/listePretMembre.jsp");
-//                  dispatcher.forward(request, response);
-//              }
 
          } catch(Exception e) {
              List<String> listeMessageErreur = new LinkedList<String>();
@@ -56,10 +42,8 @@ public class Ligues extends HttpServlet {
          }
     }
     
-    public void ajouterLigue(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-    	try
-        {
+    public void ajouterLigue(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	try {
     		String nomLigue = request.getParameter("nomLigue");
             String nbJoueur = request.getParameter("nbJoueur");
             if (nomLigue == null || nomLigue.equals(""))
@@ -70,26 +54,21 @@ public class Ligues extends HttpServlet {
             // exécuter la maj en utilisant synchronized pour s'assurer
             // que le thread du servlet est le seul à exécuter une transaction
             // sur biblio
-            synchronized (centreSportifUpdate)
-            {
+            synchronized (centreSportifUpdate) {
             	centreSportifUpdate.getGestionLigue().ajouterLigue(nomLigue, Integer.parseInt(nbJoueur));
-            	 List<String> listeMessageSucces = new LinkedList<String>();
-            	 listeMessageSucces.add("Succes de la création de la ligue " + nomLigue);
-                 request.setAttribute("listeMessageSucces", listeMessageSucces);
+            	List<String> listeMessageSucces = new LinkedList<String>();
+            	listeMessageSucces.add("Succes de la création de la ligue " + nomLigue);
+                request.setAttribute("listeMessageSucces", listeMessageSucces);
             }
             RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/ligues.jsp");
             dispatcher.forward(request, response);
-        }
-        catch (IFT287Exception e)
-        {
+        } catch (IFT287Exception e) {
             List<String> listeMessageErreur = new LinkedList<String>();
             listeMessageErreur.add(e.toString());
             request.setAttribute("listeMessageErreur", listeMessageErreur);
             RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/ligues.jsp");
             dispatcher.forward(request, response);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.toString());
         }
@@ -97,8 +76,7 @@ public class Ligues extends HttpServlet {
     
     public void supprimerLigue(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-    	try
-        {
+    	try {
     		String nomLigue = request.getParameter("nomLigue");
             if (nomLigue == null || nomLigue.equals(""))
                 throw new IFT287Exception("Le nom de la ligue doit être spécifié");
@@ -114,17 +92,13 @@ public class Ligues extends HttpServlet {
             }
             RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/ligues.jsp");
             dispatcher.forward(request, response);
-        }
-        catch (IFT287Exception e)
-        {
+        } catch (IFT287Exception e) {
             List<String> listeMessageErreur = new LinkedList<String>();
             listeMessageErreur.add(e.toString());
             request.setAttribute("listeMessageErreur", listeMessageErreur);
             RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/ligues.jsp");
             dispatcher.forward(request, response);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.toString());
         }
@@ -132,8 +106,7 @@ public class Ligues extends HttpServlet {
     
     public void afficherLigue(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-    	try
-        {
+    	try {
     		String nomLigue = request.getParameter("nomLigue");
             if (nomLigue == null || nomLigue.equals(""))
                 throw new IFT287Exception("Le nom de la ligue doit être spécifié");
@@ -142,22 +115,17 @@ public class Ligues extends HttpServlet {
             // que le thread du servlet est le seul à exécuter une transaction
             // sur biblio
             synchronized (centreSportifUpdate) {
-            	System.out.println("afficher ligue");
             	centreSportifUpdate.getGestionLigue().afficherLigue(nomLigue, request);
             }
             RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/ligues.jsp");
             dispatcher.forward(request, response);
-        }
-        catch (IFT287Exception e)
-        {
+        } catch (IFT287Exception e) {
             List<String> listeMessageErreur = new LinkedList<String>();
             listeMessageErreur.add(e.toString());
             request.setAttribute("listeMessageErreur", listeMessageErreur);
             RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/ligues.jsp");
             dispatcher.forward(request, response);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.toString());
         }

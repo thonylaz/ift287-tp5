@@ -47,7 +47,7 @@
 					    <select class="form-control" name="nomLigue">
 					    <option value=""></option>
 					    <% GestionCentreSportif centreSportifInterro = (GestionCentreSportif) request.getSession().getAttribute("centreSportifInterrogation"); 
-						    ArrayList<String> ligues = centreSportifInterro.getGestionLigue().getLigues().getLigue();
+						    ArrayList<String> ligues = centreSportifInterro.getGestionLigue().getLigues().getLigues();
 					    	for(String s : ligues) {
 					    		%><option value="<%= s %>"><%= s %></option><%
 				    		}%>
