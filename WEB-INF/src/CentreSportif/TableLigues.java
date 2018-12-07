@@ -55,7 +55,7 @@ public class TableLigues {
         {
             TupleLigue tupleLigue = new TupleLigue();
             tupleLigue.setNomLigue(nomLigue);
-            tupleLigue.setNbJoueurMaxParEquipe(rset.getInt(1));
+            tupleLigue.setNbJoueurMaxParEquipe(rset.getInt(2));
 
             rset.close();
             return tupleLigue;
