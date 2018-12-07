@@ -23,9 +23,9 @@ public class Participants extends HttpServlet {
              dispatcher.forward(request, response);
          } else if (request.getParameter("inscrireParticipant") != null) {
         	 inscrireParticipant(request, response);
-         } /*else if (request.getParameter("supprimerParticipant") != null) {
+         } else if (request.getParameter("supprimerParticipant") != null) {
         	 supprimerParticipant(request, response);  
-         } else if (request.getParameter("ajouterJoueur") != null) {
+         } /*else if (request.getParameter("ajouterJoueur") != null) {
         	 ajouterJoueur(request, response);  
          } else if (request.getParameter("supprimerJoueur") != null) {
         	 supprimerJoueur(request, response);  
@@ -57,6 +57,8 @@ public class Participants extends HttpServlet {
     	    String prenom = request.getParameter("prenom");
     	    String motDePasse = request.getParameter("motDePasse");
     	    
+    	    if (matricule == null || matricule.equals(""))
+                throw new IFT287Exception("La matricule du participant doit être spécifié"); 
             if (nom == null || nom.equals(""))
                 throw new IFT287Exception("Le nom du participant doit être spécifié");          
             if (prenom == null || prenom.equals(""))
@@ -75,6 +77,41 @@ public class Participants extends HttpServlet {
             	 List<String> listeMessageSucces = new LinkedList<String>();
             	 listeMessageSucces.add("Inscription du participant: " + prenom + " " + nom);
                  request.setAttribute("listeMessageSucces", listeMessageSucces);
+            }
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/participants.jsp");
+            dispatcher.forward(request, response);
+        }
+        catch (IFT287Exception e)
+        {
+            List<String> listeMessageErreur = new LinkedList<String>();
+            listeMessageErreur.add(e.toString());
+            request.setAttribute("listeMessageErreur", listeMessageErreur);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/participants.jsp");
+            dispatcher.forward(request, response);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.toString());
+        }
+    }
+    
+    public void supprimerParticipant(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+    	try
+        {
+    		String matricule = request.getParameter("matricule");
+            if (matricule == null || matricule.equals(""))
+                throw new IFT287Exception("La matricule doit être spécifié");
+            GestionCentreSportif centreSportifUpdate = (GestionCentreSportif) request.getSession().getAttribute("centreSportifUpdate");
+            // exécuter la maj en utilisant synchronized pour s'assurer
+            // que le thread du servlet est le seul à exécuter une transaction
+            // sur biblio
+            synchronized (centreSportifUpdate) {
+            	centreSportifUpdate.getGestionParticipant().supprimerParticipant(Integer.parseInt(matricule));
+            	List<String> listeMessageSucces = new LinkedList<String>();
+            	listeMessageSucces.add("Succes de la suppression du participant avec la matricule " + matricule);
+            	request.setAttribute("listeMessageSucces", listeMessageSucces);
             }
             RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/participants.jsp");
             dispatcher.forward(request, response);

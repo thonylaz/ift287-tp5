@@ -45,6 +45,29 @@
 				</div>
 			</form>
 			</div>
+			<br>
+			<h3 class="text-left">Supprimer un participant</h3>
+			<hr>
+			<div class="col-md-4 pull-left">
+				<form action="Participants" method="POST">
+				    <div class="form-group">
+					    <label for="nomLigue">Matricule du participant</label>
+					    <select class="form-control" name="matricule">
+					    <option value=""></option>
+					    <% GestionCentreSportif centreSportifInterro = (GestionCentreSportif) request.getSession().getAttribute("centreSportifInterrogation"); 
+						    ArrayList<String> participantsMatricule = new ArrayList<>();// = centreSportifInterro.getGestionParticipant().getParticipants().getParticipantsMatricule();
+					    	for(String s : participantsMatricule) {
+					    		%><option value="<%= s %>"><%= s %></option><%
+				    		}%>
+					    </select>
+				    </div>
+				    <div class="row">
+				    	<div class="col-md-6">
+							<input class="btn btn-primary" type="SUBMIT" name="supprimerParticipant" value="Supprimer le participant">
+						</div>
+					</div>
+				</form>
+			</div>
 	
 			<%-- inclusion d'une autre page pour l'affichage des messages d'erreur--%>
 			<jsp:include page="/WEB-INF/messageSucces.jsp" />
