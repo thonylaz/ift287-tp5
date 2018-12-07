@@ -1,18 +1,14 @@
 package CentreSportifServlet;
-import CentreSportif.*;
 
 import java.util.*;
 import java.io.*;
-import java.sql.Date;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
 
 import CentreSportif.IFT287Exception;
 import CentreSportif.GestionCentreSportif;
-import CentreSportif.Connexion;
 import CentreSportifServlet.CentreSportifHelper;
-import CentreSportifServlet.CentreSportifConstantes;
 	
 public class Ligues extends HttpServlet {
 	private static final long serialVersionUID = 1L;
