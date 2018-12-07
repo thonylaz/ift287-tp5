@@ -42,8 +42,12 @@ public class GestionCentreSportif {
         // Fermeture de la connexion
         cx.fermer();
     }
+    
+    public Connexion getConnexion() {
+    	return this.cx;
+    }
 
-    public GestionParticipant getGestionParticipant() {
+    public GestionParticipant getGestionParticipant() throws IFT287Exception {
         return gestionParticipant;
     }
 
@@ -51,7 +55,7 @@ public class GestionCentreSportif {
         this.gestionParticipant = gestionParticipant;
     }
 
-    public GestionEquipe getGestionEquipe() {
+    public GestionEquipe getGestionEquipe() throws IFT287Exception {
         return gestionEquipe;
     }
 
@@ -59,7 +63,7 @@ public class GestionCentreSportif {
         this.gestionEquipe = gestionEquipe;
     }
 
-    public GestionLigue getGestionLigue() {
+    public GestionLigue getGestionLigue() throws IFT287Exception{
         return gestionLigue;
     }
 
@@ -67,7 +71,7 @@ public class GestionCentreSportif {
         this.gestionLigue = gestionLigue;
     }
 
-    public GestionResultat getGestionResultat() {
+    public GestionResultat getGestionResultat() throws IFT287Exception{
         return gestionResultat;
     }
 

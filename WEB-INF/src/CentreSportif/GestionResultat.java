@@ -19,8 +19,8 @@ public class GestionResultat {
     }
 
     /**
-     * Ajout d'un nouveau resultat dans la base de données. S'il existe déjà, une
-     * exception est levée.
+     * Ajout d'un nouveau resultat dans la base de donnÃ©es. S'il existe dÃ©jÃ , une
+     * exception est levÃ©e.
      */
     public void ajouterResultat(String nomEquipeA, int scoreEquipeA, String nomEquipeB, int scoreEquipeB)
             throws SQLException, IFT287Exception, Exception {
@@ -42,6 +42,8 @@ public class GestionResultat {
             if(scoreEquipeB < 0)
                 throw new IFT287Exception("Le score de l'équipe B doit être positif.");
             
+            if(nomEquipeA.equals(nomEquipeB))
+            	throw new IFT287Exception("L'équipe " + nomEquipeA + " ne peux pas jouer contre elle-même");
             // Ajout d'un resultat dans la table des livres
             resultats.ajouterResultat(nomEquipeA, scoreEquipeA, nomEquipeB, scoreEquipeB);
 
@@ -51,6 +53,10 @@ public class GestionResultat {
             cx.rollback();
             throw e;
         }
+    }
+    
+    public TableResultats getResultat() {
+    	return  resultats;
     }
 
 

@@ -1,14 +1,13 @@
 package CentreSportifServlet;
 
-import java.sql.*;
 import java.util.*;
 import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
 import CentreSportif.IFT287Exception;
-import CentreSportif.GestionCentreSportif;
-import CentreSportifServlet.CentreSportifConstantes;
+import CentreSportif.Connexion;
+import CentreSportifServlet.CentreSportifHelper;
 
 
 
@@ -16,87 +15,105 @@ public class Login extends HttpServlet
 {
     private static final long serialVersionUID = 1L;
 
+    @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         try
         {
-            HttpSession session = request.getSession();
-            // fermer la session si elle a dÃ©jÃ   Ã©tÃ© ouverte lors d'un appel
-            // prÃ©cÃ©dent
-            // survient lorsque l'usager recharge la page login.jsp
-            if (session.getAttribute("etat") != null)
+            System.out.println("Servlet Login : POST");
+            // Si on a déjà entré les informations de connexion valide
+            if (CentreSportifHelper.infoBDValide(getServletContext()))
             {
-                // pour dÃ©boggage seulement : afficher no session et information
-                System.out.println("GestionCentreSportif: session dÃ©jÃ  crï¿½e; id=" + session.getId());
-                // la mÃ©thode invalidate appelle le listener
-                // CentreSportifSessionListener; cette classe est chargÃ©e lors du
-                // dÃ©marrage de
-                // l'application par le serveur (voir le fichier web.xml)
-                session.invalidate();
-                session = request.getSession();
-                System.out.println("GestionCentreSportif: session invalide");
+            	CentreSportifHelper.DispatchToLogin(request, response);
+                return;
             }
-
-            // lecture des parametres du formulaire login.jsp
+            
+            // lecture des paramètres du formulaire login.jsp
             String userId = request.getParameter("userIdBD");
             String motDePasse = request.getParameter("motDePasseBD");
             String serveur = request.getParameter("serveur");
             String bd = request.getParameter("bd");
+            
+            request.setAttribute("userIdBD", userId);
+            request.setAttribute("motDePasseBD", motDePasse);
+            request.setAttribute("serveur", serveur);
+            request.setAttribute("bd", bd);
+                        
+            if(userId == null || userId.equals(""))
+                throw new IFT287Exception("Vous devez entrer un nom d'utilisateur.");
+            
+            if(motDePasse == null || motDePasse.equals(""))
+                throw new IFT287Exception("Vous devez entrer un mot de passe.");
+            
+            if(bd == null || bd.equals(""))
+                throw new IFT287Exception("Vous devez entrer un nom de base de donnée.");
 
-            if (serveur != null)
+            if (serveur == null || serveur.equals(""))
             {
-                /*
-                 * ouvrir une connexion avec la BD et crÃ©er les gestionnaires et
-                 * stocker dans la session. On ouvre une session en lecture
-                 * readcommited pour les interrogations seulement et une autre
-                 * en mode serialisable, pour les transactions
-                 */
-                System.out.println("Login: session id=" + session.getId());
-                GestionCentreSportif centreSportifInterrogation = new GestionCentreSportif(serveur, bd, userId, motDePasse);
-                //centreSportifInterrogation.getConnexion().setIsolationReadCommited();
-                session.setAttribute("biblioInterrogation", centreSportifInterrogation);
-                GestionCentreSportif centreSportifUpdate = new GestionCentreSportif(serveur, bd, userId, motDePasse);
-                session.setAttribute("biblioUpdate", centreSportifUpdate);
-
-                // afficher le menu membre en appelant la page
-                // selectionParticipant.jsp
-                // tous les JSP sont dans /WEB-INF/
-                // ils ne peuvent pas etre appelÃ©s directement par l'utilisateur
-                // seulement par un autre JSP ou un servlet
-                RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/selectionParticipant.jsp");
+                throw new IFT287Exception("Vous devez choisir un serveur.");
+            }
+            
+            try
+            {
+                // Valider que les informations entrées sont les bonnes
+                Connexion cx = new Connexion(serveur, bd, userId, motDePasse);
+                cx.fermer();
+                
+                // Sauvegarder les informations de connexion dans le contexte pour les réutiliser
+                // pour chaque client connecté                    
+                getServletContext().setAttribute("serveur", serveur);
+                getServletContext().setAttribute("bd", bd);
+                getServletContext().setAttribute("user", userId);
+                getServletContext().setAttribute("pass", motDePasse);
+                
+                // Afficher le menu de connexion principal de l'application 
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/Login");
                 dispatcher.forward(request, response);
-                session.setAttribute("etat", new Integer(CentreSportifConstantes.CONNECTE));
             }
-            else
+            catch(Exception e)
             {
-                throw new SQLException("Vous devez vous connecter au serveur.");
+                List<String> listeMessageErreur = new LinkedList<String>();
+                listeMessageErreur.add("Erreur de connexion au serveur de base de donnée");
+                listeMessageErreur.add(e.getMessage());
+                request.setAttribute("listeMessageErreur", listeMessageErreur);
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/index.jsp");
+                dispatcher.forward(request, response);
+                // pour déboggage seulement : afficher tout le contenu de
+                // l'exception
+                e.printStackTrace();
             }
-        }
-        catch (SQLException e)
-        {
-            List<String> listeMessageErreur = new LinkedList<String>();
-            listeMessageErreur.add("Erreur de connexion au serveur");
-            listeMessageErreur.add(e.toString());
-            request.setAttribute("listeMessageErreur", listeMessageErreur);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/login.jsp");
-            dispatcher.forward(request, response);
-            // pour dï¿½boggage seulement : afficher tout le contenu de
-            // l'exception
-            e.printStackTrace();
+            
         }
         catch (IFT287Exception e)
         {
+            List<String> listeMessageErreur = new LinkedList<String>();
+            listeMessageErreur.add(e.getMessage());
+            request.setAttribute("listeMessageErreur", listeMessageErreur);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/index.jsp");
+            dispatcher.forward(request, response);
+            // pour déboggage seulement : afficher tout le contenu de
+            // l'exception
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.toString());
         }
     }
 
-    // Dans les formulaires, on utilise la mÃ©thode POST
-    // donc, si le servlet est appelÃ© avec la mÃ©thode GET
-    // on appelle POST
+    // Dans les formulaires, on utilise la méthode POST
+    // donc, si le servlet est appelé avec la méthode GET, c'est que 
+    // quelqu'un a tapé le nom du servlet dans la barre d'adresse.
+    // On redirige vers la bonne page
+    @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        doPost(request, response);
+        System.out.println("Servlet Equipes : GET");
+        // Si on a déjà entré les informations de connexion valide
+        if (CentreSportifHelper.infoBDValide(getServletContext()))
+        {
+        	CentreSportifHelper.DispatchToLogin(request, response);
+        }
+        else
+        {
+        	CentreSportifHelper.DispatchToBDConnect(request, response);
+        }
     }
 
 } // class

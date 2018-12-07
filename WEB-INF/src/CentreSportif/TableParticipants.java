@@ -12,11 +12,14 @@ public class TableParticipants {
     private PreparedStatement stmtExiste;
     private PreparedStatement stmtInsert;
     private PreparedStatement stmtDelete;
+    private PreparedStatement stmtParticpantMatricule;
     private PreparedStatement stmtUpdateNomEquipeNull;
     private PreparedStatement stmtUpdateNomEquipe;
     private PreparedStatement stmtUpdateAccepte;
     private PreparedStatement stmtUpdateRefuser;
     private PreparedStatement stmtgetJoueurEquipe;
+    private PreparedStatement stmtParticipantEquipe;
+    private PreparedStatement stmtParticipantInscrit;
 
 
     public TableParticipants(Connexion cx) throws SQLException {
@@ -26,14 +29,14 @@ public class TableParticipants {
                 "select matricule, nom, prenom, motDePasse, nomEquipe, estAccepte from participants where matricule = ?");
         stmtInsert = cx.getConnection()
                 .prepareStatement("insert into participants (matricule, nom, prenom, motDePasse, estAccepte, nomEquipe) "
-                        + "values (?,?,?,?,0, null)");
+                        + "values (?,?,?,?,null, null)");
         stmtDelete = cx.getConnection().prepareStatement("delete from participants where matricule = ?");
 
         stmtUpdateNomEquipe = cx.getConnection()
                 .prepareStatement("update participants set nomEquipe = ? where matricule = ?");
 
         stmtUpdateNomEquipeNull = cx.getConnection()
-                .prepareStatement("update participants set nomEquipe = ? where matricule = ?");
+                .prepareStatement("update participants set nomEquipe = null, estAccepte = null  where matricule = ?");
 
         stmtUpdateAccepte = cx.getConnection()
                 .prepareStatement("update participants set estAccepte = 1 where matricule = ?");
@@ -43,6 +46,12 @@ public class TableParticipants {
 
         stmtgetJoueurEquipe = cx.getConnection().prepareStatement(
                 "select matricule, nom, prenom, motDePasse, nomEquipe from participants where nomEquipe = ? and estAccepte = 1");
+        
+        stmtParticpantMatricule = cx.getConnection().prepareStatement("select matricule from participants");
+        
+        stmtParticipantEquipe = cx.getConnection().prepareStatement("select matricule from participants where nomEquipe is not null and estAccepte = 1");
+        
+        stmtParticipantInscrit = cx.getConnection().prepareStatement("select matricule from participants where nomEquipe is not null and estAccepte is null");
     }
 
     public boolean existe(int matricule) throws SQLException {
@@ -77,9 +86,7 @@ public class TableParticipants {
     }
 
     public void supprimerEquipe(String nomEquipe,int matricule) throws SQLException {
-        stmtUpdateNomEquipeNull.setNull(1, matricule, nomEquipe);
-        stmtUpdateNomEquipeNull.setInt(2, matricule);
-
+    	stmtUpdateNomEquipeNull.setInt(1, matricule);
         stmtUpdateNomEquipeNull.executeUpdate();
     }
 
@@ -91,11 +98,10 @@ public class TableParticipants {
     }
 
     public void refuserJoueur(String nomEquipe,int matricule) throws SQLException{
-        //stmtUpdateRefuser.setString(1,nomEquipe);
-        stmtUpdateRefuser.setInt(1, matricule);
-
+    	stmtUpdateRefuser.setInt(1, matricule);
         stmtUpdateRefuser.executeUpdate();
     }
+
 
     //Lecture d'un participant
 
@@ -134,6 +140,36 @@ public class TableParticipants {
         }
         rset.close();
         return participants;
+    }
+    
+    public ArrayList<String> getParticipantsMatricule() throws SQLException {
+        ArrayList<String> listes = new ArrayList<>();
+        ResultSet rset = stmtParticpantMatricule.executeQuery();
+        while(rset.next()) {
+            listes.add(Integer.toString(rset.getInt(1)));
+        }
+        rset.close();
+        return listes;
+    } 
+    
+    public ArrayList<String> getParticipantsDansEquipe() throws SQLException {
+    	 ArrayList<String> listes = new ArrayList<>();
+         ResultSet rset = stmtParticipantEquipe.executeQuery();
+         while(rset.next()) {
+             listes.add(Integer.toString(rset.getInt(1)));
+         }
+         rset.close();
+         return listes;
+    }
+    
+    public ArrayList<String> getParticipantsInscrit() throws SQLException {
+    	ArrayList<String> listes = new ArrayList<>();
+        ResultSet rset = stmtParticipantInscrit.executeQuery();
+        while(rset.next()) {
+            listes.add(Integer.toString(rset.getInt(1)));
+        }
+        rset.close();
+        return listes;
     }
 
     /**

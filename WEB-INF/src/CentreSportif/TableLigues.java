@@ -3,11 +3,13 @@ package CentreSportif;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.*;
 
 public class TableLigues {
     private Connexion cx;
 
     private PreparedStatement stmtExiste;
+    private PreparedStatement stmtLigues;
     private PreparedStatement stmtInsert;
     private PreparedStatement stmtDelete;
 
@@ -20,6 +22,7 @@ public class TableLigues {
                 .prepareStatement("insert into ligues (nomLigue, nbJoueurMaxParEquipe) "
                         + "values (?,?)");
         stmtDelete = cx.getConnection().prepareStatement("delete from ligues where nomLigue = ?");
+        stmtLigues = cx.getConnection().prepareStatement("select nomLigue from ligues");
     }
 
     public boolean existe(String nomLigue) throws SQLException {
@@ -52,7 +55,7 @@ public class TableLigues {
         {
             TupleLigue tupleLigue = new TupleLigue();
             tupleLigue.setNomLigue(nomLigue);
-            tupleLigue.setNbJoueurMaxParEquipe(rset.getInt(1));
+            tupleLigue.setNbJoueurMaxParEquipe(rset.getInt(2));
 
             rset.close();
             return tupleLigue;
@@ -66,4 +69,14 @@ public class TableLigues {
     public Connexion getConnexion() {
         return cx;
     }
+
+	public ArrayList<String> getLigues() throws SQLException {
+		ArrayList<String> ligues = new ArrayList<String>();
+		ResultSet rset = stmtLigues.executeQuery();
+		while(rset.next()) {
+			ligues.add(rset.getString(1));
+		}
+		rset.close();
+		return ligues;
+	}
 }

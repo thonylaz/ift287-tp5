@@ -15,15 +15,15 @@ public class CentreSportifSessionListener implements HttpSessionListener
 
     public void sessionDestroyed(HttpSessionEvent se)
     {
-        System.out.println("CentreSportifSessionListener " + se.getSession().getId());
+    	System.out.println("Session détruite pour l'utilisateur " + se.getSession().getAttribute("userID"));
         
         GestionCentreSportif centreSportifInterrogation = (GestionCentreSportif)se.getSession().getAttribute("centreSportifInterrogation");
         if (centreSportifInterrogation != null)
         {
-           //System.out.println("connexion =" + centreSportifInterrogation.getConnexion());
             try
             {
-            	centreSportifInterrogation.fermer();
+                System.out.println("Fermeture de la connexion d'interrogation...");
+                centreSportifInterrogation.fermer();
             }
             catch (SQLException e)
             {
@@ -33,16 +33,16 @@ public class CentreSportifSessionListener implements HttpSessionListener
         }
         else
         {
-            System.out.println("CentreSportif inaccessible.");
+            System.out.println("Aucun gestionnaire d'interrogation n'avait encore été créé.");
         }
         
         GestionCentreSportif centreSportifUpdate = (GestionCentreSportif)se.getSession().getAttribute("centreSportifUpdate");
         if (centreSportifUpdate != null)
         {
-            //System.out.println("connexion = " + centreSportifUpdate.getConnexion());
             try
             {
-            	centreSportifUpdate.fermer();
+                System.out.println("Fermeture de la connexion de mise à jour...");
+                centreSportifUpdate.fermer();
             }
             catch (SQLException e)
             {
@@ -52,7 +52,7 @@ public class CentreSportifSessionListener implements HttpSessionListener
         }
         else
         {
-            System.out.println("CentreSportif inaccessible.");
+            System.out.println("Aucun gestionnaire de mise à jour n'avait encore été créé.");
         }
     }
 }

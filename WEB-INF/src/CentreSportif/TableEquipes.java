@@ -10,7 +10,7 @@ public class TableEquipes {
 
     private PreparedStatement stmtExiste;
     private PreparedStatement stmtInsert;
-    private PreparedStatement stmtDelete;
+    private PreparedStatement stmtEquipes;
     private PreparedStatement stmtListeEquipesTriesLigue;    //  Liste des équipes trié par lignes
     private PreparedStatement stmtListeEquipesLigue;        // Liste des équipes d'une ligue
 
@@ -22,7 +22,7 @@ public class TableEquipes {
         stmtInsert = cx.getConnection()
                 .prepareStatement("insert into equipes (nomLigue, nomEquipe, matriculeCapitaine) "
                         + "values (?,?,?)");
-        stmtDelete = cx.getConnection().prepareStatement("delete from equipes where nomEquipe = ?");
+        stmtEquipes = cx.getConnection().prepareStatement("select nomEquipe from equipes");
 
         stmtListeEquipesTriesLigue = cx.getConnection().prepareStatement(
                 "select nomLigue, nomEquipe, matriculeCapitaine from equipes order by nomLigue");
@@ -96,6 +96,17 @@ public class TableEquipes {
         rset.close();
         return equipes;
     }
+    
+    public ArrayList<String> getNomEquipes() throws SQLException {
+        ArrayList<String> equipes = new ArrayList<>();
+        ResultSet rset = stmtEquipes.executeQuery();
+
+        while(rset.next()) {
+            equipes.add(rset.getString(1));
+        }
+        rset.close();
+        return equipes;
+    }
 
     /**
      * Retourner la connexion associée.
@@ -103,5 +114,4 @@ public class TableEquipes {
     public Connexion getConnexion() {
         return cx;
     }
-
 }
