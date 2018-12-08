@@ -66,8 +66,9 @@ public class GestionParticipant {
             throw e;
         }
     }
+    
     /**
-     * Permettre Ã  un particpant de s'inscrire dans une Ã©quipe.
+     * Permettre à un particpant de s'inscrire dans une équipe.
      */
     public void ajouterJoueur(String nomEquipe, int matricule ) throws SQLException, IFT287Exception, Exception {
         try {
@@ -92,7 +93,7 @@ public class GestionParticipant {
         }
     }
     /**
-     * Permettre Ã  un particpant de s'inscrire dans une Ã©quipe.
+     * Permettre à un particpant de s'inscrire dans une équipe.
      */
     public void supprimerJoueur(String nomEquipe, int matricule ) throws SQLException, IFT287Exception, Exception {
         try {
@@ -104,7 +105,7 @@ public class GestionParticipant {
                 throw new IFT287Exception("Participant inexistant: " + matricule);
 
             if (tupleParticipant.getNomEquipe()== null )
-                throw new IFT287Exception("Le participant avec la matricule: " + matricule + " ne fait partie d'une équipe");
+                throw new IFT287Exception("Le participant avec la matricule: " + matricule + " n'a pas d'équipe");
             
             if (!tupleParticipant.getNomEquipe().equals(nomEquipe))
                 throw new IFT287Exception("Le participant avec la matricule: " + matricule + " ne fait partie de l'équipe: " + nomEquipe);
@@ -135,14 +136,14 @@ public class GestionParticipant {
                 throw new IFT287Exception("Il faut ajouter le participant dans l'equipe avant de l'accepter");
             
             if (tupleParticipant.getNomEquipe()== null )
-                throw new IFT287Exception("Le participant avec la matricule: " + matricule + " ne fait partie d'une équipe");
+                throw new IFT287Exception("Le participant avec la matricule: " + matricule + " n'a pas d'équipe");
 
-            if(tupleParticipant.getEstAccepter() != 0)
-                throw new IFT287Exception("Participant: " + matricule + " deja accepte" );
+            if(tupleParticipant.getEstAccepter() == 1)
+                throw new IFT287Exception("Le participant: " + matricule + " est deja accepte" );
             
             TupleLigue tupleLigue = ligues.getLigue(tupleEquipe.getNomLigue());
             if(tupleLigue == null)
-                throw new IFT287Exception("Ligue: " + tupleEquipe.getNomLigue() + " non existante");
+                throw new IFT287Exception("Ligue: " + tupleLigue.getNomLigue() + " non existante");
 
             if (tupleLigue.getNbJoueurMaxParEquipe() <= participants.getJoueursEquipe(nomEquipe).size())
                 throw new IFT287Exception("Equipe complete");
@@ -175,8 +176,8 @@ public class GestionParticipant {
             if (tupleParticipant.getMatricule() == tupleEquipe.getMatriculeCapitaine())
                 throw new IFT287Exception("Le matricule est celui du capitaine: " + matricule);
 
-            if(tupleParticipant.getEstAccepter() == 0)
-                throw new IFT287Exception("Participant: " + matricule + " déjà refusé" );
+            if(tupleParticipant.getEstAccepter() == 1)
+                throw new IFT287Exception("Participant: " + matricule + " fait déjà partie de l'équipe. Veuillez supprimer le joueur de l'équipe." );
 
             participants.refuserJoueur(nomEquipe, matricule);
 
