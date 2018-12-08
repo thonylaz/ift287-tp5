@@ -100,37 +100,6 @@
 			</form>
 			</div>
 			<br>
-			<h3 class="text-left">Supprimer un joueur d'une équipe</h3>
-			<hr>
-			<div class="col-md-4 pull-left">
-			<form action="Participants" method="POST">
-				<div class="form-group">
-			    	<label for="matricule">Matricule</label>
-			    	<select class="form-control" name="matricule">
-					    <option value=""></option>   
-  					    <%ArrayList<String> matriculeEquipe = centreSportifInterro.getGestionParticipant().getParticipant().getParticipantsDansEquipe();
-  					    for(String s : matriculeEquipe) {
-				    		%><option value="<%= s %>"><%= s %></option><%
-			    		}%>
-				    </select>
-			    </div>
-			    <div class="form-group">
-			    	<label for="nomEquipe">Nom de léquipe</label>
-			    	<select class="form-control" name="nomEquipe">
-					    <option value=""></option>   
-  					    <%for(String s : equipes) {
-				    		%><option value="<%= s %>"><%= s %></option><%
-			    		}%>
-				    </select>
-			    </div>
-			    <div class="row">
-			    	<div class="col-md-6">
-						<input class="btn btn-primary" type="SUBMIT" name="supprimerJoueur" value="Supprimer le joueur de l'équipe">
-					</div>
-				</div>
-			</form>
-			</div>
-			<br>
 			<h3 class="text-left">Accepter un participant dans l'équipe</h3>
 			<hr>
 			<div class="col-md-4 pull-left">
@@ -191,6 +160,40 @@
 				</div>
 			</form>
 			</div>
+		
+			<br>
+			<h3 class="text-left">Supprimer un joueur d'une équipe</h3>
+			<hr>
+			<div class="col-md-4 pull-left">
+			<form action="Participants" method="POST">
+				<div class="form-group">
+			    	<label for="matricule">Matricule</label>
+			    	<select class="form-control" name="matricule">
+					    <option value=""></option>   
+  					    <%ArrayList<String> matriculeEquipe = centreSportifInterro.getGestionParticipant().getParticipant().getParticipantsDansEquipe();
+  					    for(String s : matriculeEquipe) {
+				    		%><option value="<%= s %>"><%= s %></option><%
+			    		}%>
+				    </select>
+			    </div>
+			    <div class="form-group">
+			    	<label for="nomEquipe">Nom de léquipe</label>
+			    	<select class="form-control" name="nomEquipe">
+					    <option value=""></option>   
+  					    <%for(String s : equipes) {
+				    		%><option value="<%= s %>"><%= s %></option><%
+			    		}%>
+				    </select>
+			    </div>
+			    <div class="row">
+			    	<div class="col-md-6">
+						<input class="btn btn-primary" type="SUBMIT" name="supprimerJoueur" value="Supprimer le joueur de l'équipe">
+					</div>
+				</div>
+			</form>
+			</div>
+			
+			
 			<br>
 			<%-- inclusion d'une autre page pour l'affichage des messages d'erreur--%>
 			<jsp:include page="/WEB-INF/messageSucces.jsp" />

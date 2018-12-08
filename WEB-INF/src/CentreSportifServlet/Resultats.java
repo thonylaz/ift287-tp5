@@ -55,7 +55,7 @@ public class Resultats extends HttpServlet {
             // que le thread du servlet est le seul à exécuter une transaction
             // sur biblio
             synchronized (centreSportifUpdate) {
-            	centreSportifUpdate.getGestionResultat().getResultat().ajouterResultat(nomEquipeA, Integer.parseInt(scoreEquipeA), nomEquipeB, Integer.parseInt(scoreEquipeB));
+            	centreSportifUpdate.getGestionResultat().ajouterResultat(nomEquipeA, Integer.parseInt(scoreEquipeA), nomEquipeB, Integer.parseInt(scoreEquipeB));
             	List<String> listeMessageSucces = new LinkedList<String>();
             	listeMessageSucces.add("Ajout des scores au équipe " + nomEquipeA + " et " + nomEquipeB);
                 request.setAttribute("listeMessageSucces", listeMessageSucces);

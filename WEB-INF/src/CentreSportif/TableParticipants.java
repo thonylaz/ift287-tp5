@@ -13,13 +13,14 @@ public class TableParticipants {
     private PreparedStatement stmtInsert;
     private PreparedStatement stmtDelete;
     private PreparedStatement stmtParticpantMatricule;
-    private PreparedStatement stmtUpdateNomEquipeNull;
-    private PreparedStatement stmtUpdateNomEquipe;
-    private PreparedStatement stmtUpdateAccepte;
+    private PreparedStatement stmtUpdateSupprimerJoueur;
+    private PreparedStatement stmtUpdateAjouterJoueur;
+    private PreparedStatement stmtUpdateAccepterJoueur;
     private PreparedStatement stmtUpdateRefuser;
     private PreparedStatement stmtgetJoueurEquipe;
     private PreparedStatement stmtParticipantEquipe;
     private PreparedStatement stmtParticipantInscrit;
+    private PreparedStatement stmtParticipantNonInscrit;
 
 
     public TableParticipants(Connexion cx) throws SQLException {
@@ -29,32 +30,34 @@ public class TableParticipants {
                 "select matricule, nom, prenom, motDePasse, nomEquipe, estAccepte from participants where matricule = ?");
         stmtInsert = cx.getConnection()
                 .prepareStatement("insert into participants (matricule, nom, prenom, motDePasse, estAccepte, nomEquipe) "
-                        + "values (?,?,?,?,null, null)");
+                        + "values (?,?,?,?,0, null)");
         stmtDelete = cx.getConnection().prepareStatement("delete from participants where matricule = ?");
 
-        stmtUpdateNomEquipe = cx.getConnection()
+        stmtUpdateAjouterJoueur = cx.getConnection()
                 .prepareStatement("update participants set nomEquipe = ? where matricule = ?");
 
-        stmtUpdateNomEquipeNull = cx.getConnection()
-                .prepareStatement("update participants set nomEquipe = null, estAccepte = null  where matricule = ?");
+        stmtUpdateSupprimerJoueur = cx.getConnection()
+                .prepareStatement("update participants set estAccepte = 0 where matricule = ?");
 
-        stmtUpdateAccepte = cx.getConnection()
+        stmtUpdateAccepterJoueur = cx.getConnection()
                 .prepareStatement("update participants set estAccepte = 1 where matricule = ?");
 
         stmtUpdateRefuser = cx.getConnection()
-                .prepareStatement("update participants set estAccepte = 0 where matricule = ?");
+                .prepareStatement("update participants set estAccepte = 0, nomEquipe = null  where matricule = ?");
 
         stmtgetJoueurEquipe = cx.getConnection().prepareStatement(
                 "select matricule, nom, prenom, motDePasse, nomEquipe from participants where nomEquipe = ? and estAccepte = 1");
-        
-        stmtParticpantMatricule = cx.getConnection().prepareStatement("select matricule from participants");
+    
+ stmtParticpantMatricule = cx.getConnection().prepareStatement("select matricule from participants");
         
         stmtParticipantEquipe = cx.getConnection().prepareStatement("select matricule from participants where nomEquipe is not null and estAccepte = 1");
         
-        stmtParticipantInscrit = cx.getConnection().prepareStatement("select matricule from participants where nomEquipe is not null and estAccepte is null");
+        stmtParticipantInscrit = cx.getConnection().prepareStatement("select matricule from participants where nomEquipe is not null and estAccepte = 0");
+        
+        stmtParticipantNonInscrit = cx.getConnection().prepareStatement("select matricule from participants where nomEquipe is null and estAccepte = 0");
     }
 
-    public boolean existe(int matricule) throws SQLException {
+   public boolean existe(int matricule) throws SQLException {
         stmtExiste.setInt(1, matricule);
         ResultSet rs = stmtExiste.executeQuery();
         boolean participantExiste = rs.next();
@@ -79,29 +82,29 @@ public class TableParticipants {
     }
 
     public void ajouterEquipe(String nomEquipe, int matricule)throws SQLException{
-        stmtUpdateNomEquipe.setString(1, nomEquipe);
-        stmtUpdateNomEquipe.setInt(2, matricule);
+        stmtUpdateAjouterJoueur.setString(1, nomEquipe);
+        stmtUpdateAjouterJoueur.setInt(2, matricule);
 
-        stmtUpdateNomEquipe.executeUpdate();
+        stmtUpdateAjouterJoueur.executeUpdate();
     }
 
     public void supprimerEquipe(String nomEquipe,int matricule) throws SQLException {
-    	stmtUpdateNomEquipeNull.setInt(1, matricule);
-        stmtUpdateNomEquipeNull.executeUpdate();
+        stmtUpdateSupprimerJoueur.setInt(1, matricule);
+
+        stmtUpdateSupprimerJoueur.executeUpdate();
     }
 
     public void accepterJoueur(String nomEquipe,int matricule) throws SQLException{
-        //stmtUpdateAccepte.setString(1,nomEquipe);
-        stmtUpdateAccepte.setInt(1, matricule);
+        stmtUpdateAccepterJoueur.setInt(1, matricule);
 
-        stmtUpdateAccepte.executeUpdate();
+        stmtUpdateAccepterJoueur.executeUpdate();
     }
 
     public void refuserJoueur(String nomEquipe,int matricule) throws SQLException{
-    	stmtUpdateRefuser.setInt(1, matricule);
+        stmtUpdateRefuser.setInt(1, matricule);
+
         stmtUpdateRefuser.executeUpdate();
     }
-
 
     //Lecture d'un participant
 
@@ -165,6 +168,16 @@ public class TableParticipants {
     public ArrayList<String> getParticipantsInscrit() throws SQLException {
     	ArrayList<String> listes = new ArrayList<>();
         ResultSet rset = stmtParticipantInscrit.executeQuery();
+        while(rset.next()) {
+            listes.add(Integer.toString(rset.getInt(1)));
+        }
+        rset.close();
+        return listes;
+    }
+    
+    public ArrayList<String> getParticipantsNonInscrit() throws SQLException {
+    	ArrayList<String> listes = new ArrayList<>();
+        ResultSet rset = stmtParticipantNonInscrit.executeQuery();
         while(rset.next()) {
             listes.add(Integer.toString(rset.getInt(1)));
         }
