@@ -9,5 +9,5 @@
     <warLocation></warLocation>
     <extraInfo></extraInfo>
     <mavenClasspath>false</mavenClasspath>
-    <webPath>/centreSportif</webPath>
+    <webPath>/tp5</webPath>
 </tomcatProjectProperties>
