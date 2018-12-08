@@ -20,6 +20,7 @@ public class TableParticipants {
     private PreparedStatement stmtgetJoueurEquipe;
     private PreparedStatement stmtParticipantEquipe;
     private PreparedStatement stmtParticipantInscrit;
+    private PreparedStatement stmtParticipantNonInscrit;
 
 
     public TableParticipants(Connexion cx) throws SQLException {
@@ -52,6 +53,8 @@ public class TableParticipants {
         stmtParticipantEquipe = cx.getConnection().prepareStatement("select matricule from participants where nomEquipe is not null and estAccepte = 1");
         
         stmtParticipantInscrit = cx.getConnection().prepareStatement("select matricule from participants where nomEquipe is not null and estAccepte = 0");
+        
+        stmtParticipantNonInscrit = cx.getConnection().prepareStatement("select matricule from participants where nomEquipe is null and estAccepte = 0");
     }
 
    public boolean existe(int matricule) throws SQLException {
@@ -165,6 +168,16 @@ public class TableParticipants {
     public ArrayList<String> getParticipantsInscrit() throws SQLException {
     	ArrayList<String> listes = new ArrayList<>();
         ResultSet rset = stmtParticipantInscrit.executeQuery();
+        while(rset.next()) {
+            listes.add(Integer.toString(rset.getInt(1)));
+        }
+        rset.close();
+        return listes;
+    }
+    
+    public ArrayList<String> getParticipantsNonInscrit() throws SQLException {
+    	ArrayList<String> listes = new ArrayList<>();
+        ResultSet rset = stmtParticipantNonInscrit.executeQuery();
         while(rset.next()) {
             listes.add(Integer.toString(rset.getInt(1)));
         }

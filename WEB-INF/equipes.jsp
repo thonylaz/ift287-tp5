@@ -41,7 +41,7 @@
 			    	<label for="nbJoueur">Matricule</label>
 			    	 <select class="form-control" name="matriculeCap">
 					    <option value=""></option>
-					    <%  ArrayList<String> participants = centreSportifInterro.getGestionParticipant().getParticipant().getParticipantsMatricule();
+					    <%  ArrayList<String> participants = centreSportifInterro.getGestionParticipant().getParticipant().getParticipantsNonInscrit();
 					    	for(String s : participants) {
 					    		%><option value="<%= s %>"><%= s %></option><%
 				    		}%>
