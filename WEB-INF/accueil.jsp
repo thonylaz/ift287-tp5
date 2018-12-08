@@ -3,10 +3,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>IFT287 - Système de gestion de bibliothèque</title>
+<title>IFT287 - Système de gestion du centre sportif</title>
 <meta name="author" content="Vincent Ducharme">
 <meta name="description"
-	content="Page d'accueil du système de gestion de la bilbiothèque.">
+	content="Page d'accueil du système de gestion du centre sportif">
 
 <!-- Required meta tags -->
 <meta charset="utf-8">
